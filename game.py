@@ -6,7 +6,7 @@ import pandas as pd
 
 class Game:
     @staticmethod
-    def get_game_logs(num_games=2000):
+    def get_game_logs(num_games=164):
         try:
             game_log = pd.read_csv("game_log.csv", index_col=False)
             return game_log
