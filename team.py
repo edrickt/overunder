@@ -1,6 +1,6 @@
 from nba_api.stats.static.teams import find_team_by_abbreviation, find_team_name_by_id, find_teams_by_full_name, get_teams
 from nba_api.stats.endpoints import teamestimatedmetrics
-from helperfunctions import get_years
+from helperfunctions import get_seasons
 import time
 import pandas as pd
 
@@ -22,7 +22,7 @@ class Team:
         return info
 
     def _get_team_stats_by_info(self, num_years=3):
-        years = get_years(num_years)
+        years = get_seasons(num_years)
 
         team_id = self.info["id"][0]
         stats_log = []
@@ -38,7 +38,7 @@ class Team:
         return stats_log
 
     @staticmethod
-    def set_team(name=None, team_id=None):
+    def set_team(season, name=None, team_id=None):
         try:
             all_teams = pd.read_csv("team_stats.csv", index_col=False)
         except:
@@ -53,6 +53,8 @@ class Team:
                 team_df = all_teams.loc[all_teams["nickname"] == name]
         else:
             team_df = all_teams.loc[all_teams["id"] == team_id]
+
+        team_df = team_df.loc[team_df["SEASON"] == season]
         
         info = pd.DataFrame([team_df.iloc[0, 0:7]]).reset_index(drop=True)
         stats = pd.DataFrame([team_df.iloc[0, 8:-1]]).reset_index(drop=True)
@@ -90,5 +92,3 @@ class Team:
 
         team_stats = pd.concat(team_stats).reset_index(drop=True).map(lambda s: s.lower() if type(s) == str else s)
         team_stats.to_csv("team_stats.csv", index=False)
-        
-team = Team().set_team("knicks")
