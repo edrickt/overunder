@@ -15,7 +15,6 @@ if __name__ == "__main__":
             game_metrics = Game.get_team_metrics_for_games(game_logs)
 
             columns_to_drop = ["TEAM_ID_A", "TEAM_ID_H", "GP_A", "GP_H", "W_A", "W_H", "L_A", "L_H", "SEASON_A", "SEASON_H", "TOTAL_POINTS"]
-            print(game_metrics.columns.values)
 
             X = game_metrics.drop(columns=columns_to_drop)
             y = game_metrics["TOTAL_POINTS"]

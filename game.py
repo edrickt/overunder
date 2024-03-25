@@ -36,16 +36,16 @@ class Game:
             for game_id, game in game_log.groupby("GAME_ID"):
                 if (len(game)) < 2: continue
                 cur_season = game.SEASON.iloc[0]
+                
                 team_a = Team().set_team(season=cur_season, team_id=game.iloc[0].TEAM_ID)
                 team_b = Team().set_team(season=cur_season, team_id=game.iloc[1].TEAM_ID)
                 total_points = game.iloc[0].PTS + game.iloc[1].PTS
                 
                 combined_stats = pd.concat([team_a.stats.add_suffix("_A"), team_b.stats.add_suffix("_H")], axis=1)
                 combined_stats["TOTAL_POINTS"] = total_points
+                
                 game_metrics.append(combined_stats)
                 
             game_metrics = pd.concat(game_metrics, axis=0).reset_index(drop=True)
             game_metrics.to_csv("game_logs_metrics.csv", index=False)
             return game_metrics
-
-team_a = Team().set_team("2023-24", name="knicks")
