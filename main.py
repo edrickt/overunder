@@ -6,8 +6,8 @@ from sklearn.linear_model import LinearRegression
 
 if __name__ == "__main__":
     while True:
-        team_a_input = input("team a: ")
-        team_b_input = input("team b: ")
+        team_a_input = input("away team: ")
+        team_b_input = input("home team: ")
 
         try:
             team_a = Team.set_team(team_a_input)
@@ -26,7 +26,7 @@ if __name__ == "__main__":
             X_pred = pd.concat([team_a.stats.add_suffix("_A"), team_b.stats.add_suffix("_B")], axis=1).drop(columns=columns_to_drop[:-1])
             y_pred = model.predict(X_pred)
 
-            print(f"{team_a_input} vs {team_b_input}: {y_pred[0]:2f} points\n")
+            print(f"{team_a_input} vs {team_b_input}: {y_pred[0]:.2f} points\n")
         except:
             print("bad input")
             continue
