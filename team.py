@@ -1,5 +1,6 @@
 from nba_api.stats.static.teams import find_team_by_abbreviation, find_team_name_by_id, find_teams_by_full_name, get_teams
 from nba_api.stats.endpoints import teamestimatedmetrics
+from helperfunctions import get_years
 import time
 import pandas as pd
 
@@ -20,11 +21,21 @@ class Team:
             info = pd.DataFrame([find_team_name_by_id(self.team_id)])
         return info
 
-    def _get_team_stats_by_info(self):
+    def _get_team_stats_by_info(self, num_years=3):
+        years = get_years(num_years)
+
         team_id = self.info["id"][0]
-        stats = teamestimatedmetrics.TeamEstimatedMetrics().get_data_frames()[0]
-        stats = stats[stats["TEAM_ID"] == team_id].reset_index(drop=True)
-        return stats
+        stats_log = []
+
+        for year in years:
+            stats = teamestimatedmetrics.TeamEstimatedMetrics(season=year).get_data_frames()[0]
+            stats.insert(loc=7, column="SEASON", value=year)
+            stats = stats[stats["TEAM_ID"] == team_id].reset_index(drop=True)
+            stats_log.append(stats)
+
+        stats_log = pd.concat(stats_log).reset_index(drop=True)
+
+        return stats_log
 
     @staticmethod
     def set_team(name=None, team_id=None):
@@ -43,8 +54,8 @@ class Team:
         else:
             team_df = all_teams.loc[all_teams["id"] == team_id]
         
-        info = pd.DataFrame([team_df.iloc[0, 0:6]]).reset_index(drop=True)
-        stats = pd.DataFrame([team_df.iloc[0, 7:-1]]).reset_index(drop=True)
+        info = pd.DataFrame([team_df.iloc[0, 0:7]]).reset_index(drop=True)
+        stats = pd.DataFrame([team_df.iloc[0, 8:-1]]).reset_index(drop=True)
         name = info.full_name[0]
         team_id = info.id[0]
 
@@ -67,6 +78,10 @@ class Team:
 
         return team
 
+# NOTE: ISSUE MULTIPLE ROWS OF STATS FOR TEAM BUT ONE ROW FOR INPUT RIGHT NOW
+    # FIXED ABOVE ISSUE, NOW MAKE SURE TO GET THE RIGHT TEAM GIVEN THE SEASON
+        # Last thing added is print statement to get stats as dataframe instead of series
+
     @staticmethod
     def _team_stats_to_csv():
         teams = get_teams()
@@ -74,8 +89,10 @@ class Team:
 
         for team in teams:
             cur_team = Team()._get_team(team_id=team["id"])
-
-            team_stats.append(pd.concat([cur_team.info, cur_team.stats], axis=1))
+            team_stats.append(pd.concat([cur_team.info.reset_index(drop=True), cur_team.stats.reset_index(drop=True)], axis=1))
+            print(team_stats)
+            # team_stats.append(pd.concat([cur_team.info.reset_index(drop=True), cur_team.stats.reset_index(drop=True)], axis=1))
+        print(team_stats)
 
         team_stats = pd.concat(team_stats).reset_index(drop=True).map(lambda s: s.lower() if type(s) == str else s)
         team_stats.to_csv("team_stats.csv", index=False)
