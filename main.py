@@ -3,6 +3,7 @@ from team import Team
 from helperfunctions import get_seasons
 import pandas as pd
 from sklearn.linear_model import LinearRegression
+from sklearn.tree import DecisionTreeRegressor
 
 
 if __name__ == "__main__":
@@ -23,7 +24,7 @@ if __name__ == "__main__":
             X = game_metrics.drop(columns=columns_to_drop)
             y = game_metrics["TOTAL_POINTS"]
 
-            model = LinearRegression().fit(X, y)
+            model = DecisionTreeRegressor(max_depth=5).fit(X, y)
 
             X_pred = pd.concat([team_away.stats.add_suffix("_A"), team_home.stats.add_suffix("_H")], axis=1).drop(columns=columns_to_drop[:-1])
             y_pred = model.predict(X_pred)
