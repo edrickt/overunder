@@ -6,20 +6,20 @@ import pandas as pd
 
 class Game:
     @staticmethod
-    def get_game_logs(num_years=2):
+    def get_game_logs(num_games=1230):
         try:
             game_log = pd.read_csv("game_log.csv", index_col=False)
             return game_log
         except:
-            years = get_years(num_years)
-            print(years)
+            years = get_years(num_games//82+2)
             game_log = []
 
+            num_games = num_games*2
             for year in years:
                 games = leaguegamelog.LeagueGameLog(season=year, season_type_all_star="Regular Season").get_data_frames()[0].reset_index(drop=True)
                 game_log.append(games)
 
-            game_log = pd.concat(game_log).reset_index(drop=True)
+            game_log = pd.concat(game_log).reset_index(drop=True).head(num_games)
             game_log.to_csv("game_log.csv", index=False)
             return game_log
     
