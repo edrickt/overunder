@@ -1,24 +1,24 @@
 from nba_api.stats.endpoints import leaguegamelog
 from helperfunctions import get_seasons
 from team import Team
+import time
 import pandas as pd
 
 
 class Game:
     @staticmethod
-    def get_game_logs(num_years=2):
+    def get_game_logs(num_years):
         try:
             game_log = pd.read_csv("game_log.csv", index_col=False)
             return game_log
         except:
             years = get_seasons(num_years)
-            print(years)
             game_log = []
 
             for year in years:
                 games = leaguegamelog.LeagueGameLog(season=year, season_type_all_star="Regular Season").get_data_frames()[0].reset_index(drop=True)
+                time.sleep(0.6)
                 games.insert(loc=1, column="SEASON", value=year)
-                print(games.columns.values)
                 game_log.append(games)
 
             game_log = pd.concat(game_log).reset_index(drop=True)
