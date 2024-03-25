@@ -78,10 +78,6 @@ class Team:
 
         return team
 
-# NOTE: ISSUE MULTIPLE ROWS OF STATS FOR TEAM BUT ONE ROW FOR INPUT RIGHT NOW
-    # FIXED ABOVE ISSUE, NOW MAKE SURE TO GET THE RIGHT TEAM GIVEN THE SEASON
-        # Last thing added is print statement to get stats as dataframe instead of series
-
     @staticmethod
     def _team_stats_to_csv():
         teams = get_teams()
@@ -89,10 +85,10 @@ class Team:
 
         for team in teams:
             cur_team = Team()._get_team(team_id=team["id"])
-            team_stats.append(pd.concat([cur_team.info.reset_index(drop=True), cur_team.stats.reset_index(drop=True)], axis=1))
-            print(team_stats)
-            # team_stats.append(pd.concat([cur_team.info.reset_index(drop=True), cur_team.stats.reset_index(drop=True)], axis=1))
-        print(team_stats)
+            for i in range(len(cur_team.stats)):
+                team_stats.append(pd.concat([cur_team.info.reset_index(drop=True), cur_team.stats.loc[[i]].reset_index(drop=True)], axis=1))
 
         team_stats = pd.concat(team_stats).reset_index(drop=True).map(lambda s: s.lower() if type(s) == str else s)
         team_stats.to_csv("team_stats.csv", index=False)
+        
+team = Team().set_team("knicks")
