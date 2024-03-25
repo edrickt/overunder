@@ -18,7 +18,7 @@ if __name__ == "__main__":
             team_away = Team.set_team(season=cur_season, name=input("Away Team: ").lower())
             team_home = Team.set_team(season=cur_season, name=input("Home Team: ").lower())
 
-            columns_to_drop = ["TEAM_ID_A", "TEAM_ID_H", "GP_A", "GP_H", "W_A", "W_H", "L_A", "L_H", "SEASON_A", "SEASON_H", "TOTAL_POINTS"]
+            columns_to_drop = ["TEAM_NAME_A", "TEAM_NAME_H", "TEAM_ID_A", "TEAM_ID_H", "GP_A", "GP_H", "W_A", "W_H", "L_A", "L_H", "SEASON_A", "SEASON_H", "TOTAL_POINTS"]
 
             X = game_metrics.drop(columns=columns_to_drop)
             y = game_metrics["TOTAL_POINTS"]
