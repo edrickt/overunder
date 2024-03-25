@@ -38,7 +38,7 @@ class Game:
                 team_b = Team().set_team(team_id=game.iloc[1].TEAM_ID)
                 total_points = game.iloc[0].PTS + game.iloc[1].PTS
                 
-                combined_stats = pd.concat([team_a.stats.add_suffix("_A"), team_b.stats.add_suffix("_B")], axis=1)
+                combined_stats = pd.concat([team_a.stats.add_suffix("_A"), team_b.stats.add_suffix("_H")], axis=1)
                 combined_stats["TOTAL_POINTS"] = total_points
                 game_metrics.append(combined_stats)
                 
