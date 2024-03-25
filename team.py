@@ -56,8 +56,8 @@ class Team:
 
         team_df = team_df.loc[team_df["SEASON"] == season]
         
-        info = pd.DataFrame([team_df.iloc[0, 0:7]]).reset_index(drop=True)
-        stats = pd.DataFrame([team_df.iloc[0, 8:-1]]).reset_index(drop=True)
+        info = pd.DataFrame([team_df.iloc[0, 0:6]]).reset_index(drop=True)
+        stats = pd.DataFrame([team_df.iloc[0, 7:-1]]).reset_index(drop=True)
         name = info.full_name[0]
         team_id = info.id[0]
 
