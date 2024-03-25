@@ -30,4 +30,3 @@ if __name__ == "__main__":
 
             print(f"{team_away.info.nickname[0].capitalize()} vs {team_home.info.nickname[0].capitalize()}: {y_pred[0]:.2f} points\n")
             
-            # p value analysis and look at simple decision tree, if around 3000 datapoints then can experiment neural network
