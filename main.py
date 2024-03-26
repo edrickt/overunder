@@ -1,5 +1,5 @@
 from datahandler import DataHandler
-from sklearn.neural_network import MLPRegressor
+from sklearn.linear_model import LinearRegression
 
 if __name__ == "__main__":
     # Load data. Will create the game_logs.csv, game_logs_metrics.csv, and team_stats.csv for up the past num_years
@@ -11,14 +11,18 @@ if __name__ == "__main__":
         # Get the dataframe for two teams with the dataframe formatted for prediction
         X = dh.X
         y = dh.y
-        X_pred = dh.input_teams_get_X_pred()
+        
+        team_away_name = input("Away team: ")
+        team_home_name = input("Home team: ")
+        
+        X_pred = dh.get_X_pred(team_away_name=team_away_name, team_home_name=team_home_name)
         
         # dh.input_teams_get_X_pred() will return false if bad input
         if (X_pred is False):
             print("Bad Input\n")
             continue
 
-        model = MLPRegressor().fit(X, y)
+        model = LinearRegression().fit(X, y)
         y_pred = model.predict(X_pred)
 
         print(f"{dh.team_away.info.nickname[0].capitalize()} vs {dh.team_home.info.nickname[0].capitalize()}: {y_pred[0]:.2f} points\n")

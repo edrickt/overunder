@@ -22,9 +22,9 @@ class DataHandler:
         self._load_data()
         self._set_X_y()
         
-    def input_teams_get_X_pred(self):
-        self.team_away = Team.set_team(season=self.cur_season, name=input("Away Team: ").lower())
-        self.team_home = Team.set_team(season=self.cur_season, name=input("Home Team: ").lower())
+    def get_X_pred(self, team_away_name, team_home_name):
+        self.team_away = Team.set_team(season=self.cur_season, name=team_away_name)
+        self.team_home = Team.set_team(season=self.cur_season, name=team_home_name)
         
         if (not self.team_away or not self.team_home):
             return False
