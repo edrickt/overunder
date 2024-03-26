@@ -41,6 +41,36 @@ class Team:
         team.info, team.stats = info, stats
 
         return team
+    
+    @staticmethod
+    def team_stats_to_csv(num_years):
+        try:
+            all_teams = pd.read_csv("team_stats.csv", index_col=False)
+        except:
+            teams = get_teams()
+            team_stats = []
+
+            for team in teams:
+                cur_team = Team()._get_team(num_years, team_id=team["id"])
+                for i in range(len(cur_team.stats)):
+                    team_stats.append(pd.concat([cur_team.info.reset_index(drop=True), cur_team.stats.loc[[i]].reset_index(drop=True)], axis=1))
+
+            team_stats = pd.concat(team_stats).reset_index(drop=True).map(lambda s: s.lower() if type(s) == str else s)
+            team_stats.to_csv("team_stats.csv", index=False)
+            
+    @staticmethod
+    def _get_team(num_years, name=None, team_id=None):
+        team = Team(name=name, team_id=team_id)
+
+        team.info = team._get_team_info()
+        time.sleep(0.5)
+        team.stats = team._get_team_stats_by_info(num_years)
+        time.sleep(0.5)
+
+        team.team_id = team.info.id[0]
+        team.name = team.info.full_name[0]
+
+        return team
 
     def _get_team_info(self):
         if (self.name):
@@ -68,33 +98,3 @@ class Team:
         stats_log = pd.concat(stats_log).reset_index(drop=True)
 
         return stats_log
-
-    @staticmethod
-    def _get_team(num_years, name=None, team_id=None):
-        team = Team(name=name, team_id=team_id)
-
-        team.info = team._get_team_info()
-        time.sleep(0.5)
-        team.stats = team._get_team_stats_by_info(num_years)
-        time.sleep(0.5)
-
-        team.team_id = team.info.id[0]
-        team.name = team.info.full_name[0]
-
-        return team
-
-    @staticmethod
-    def team_stats_to_csv(num_years):
-        try:
-            all_teams = pd.read_csv("team_stats.csv", index_col=False)
-        except:
-            teams = get_teams()
-            team_stats = []
-
-            for team in teams:
-                cur_team = Team()._get_team(num_years, team_id=team["id"])
-                for i in range(len(cur_team.stats)):
-                    team_stats.append(pd.concat([cur_team.info.reset_index(drop=True), cur_team.stats.loc[[i]].reset_index(drop=True)], axis=1))
-
-            team_stats = pd.concat(team_stats).reset_index(drop=True).map(lambda s: s.lower() if type(s) == str else s)
-            team_stats.to_csv("team_stats.csv", index=False)
