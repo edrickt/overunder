@@ -1,6 +1,5 @@
 from datahandler import DataHandler
 from sklearn.linear_model import LinearRegression
-from sklearn.svm import SVR
 
 
 if __name__ == "__main__":
