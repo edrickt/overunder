@@ -26,6 +26,9 @@ class Team:
                 team_df = all_teams.loc[all_teams["nickname"] == name]
         else:
             team_df = all_teams.loc[all_teams["id"] == team_id]
+            
+        if (team_df.empty):
+            return False
 
         team_df = team_df.loc[team_df["SEASON"] == season]
         

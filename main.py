@@ -1,5 +1,6 @@
 from datahandler import DataHandler
-from sklearn.tree import DecisionTreeRegressor
+from sklearn.linear_model import LinearRegression
+from sklearn.svm import SVR
 
 
 if __name__ == "__main__":
@@ -7,8 +8,11 @@ if __name__ == "__main__":
     
     while True:
             X_pred = dh.input_teams_get_X_pred()
+            if X_pred is False:
+                print("Bad Input\n")
+                continue
 
-            model = DecisionTreeRegressor(max_depth=2).fit(dh.X, dh.y)
+            model = LinearRegression().fit(dh.X, dh.y)
             y_pred = model.predict(X_pred)
 
             print(f"{dh.team_away.info.nickname[0].capitalize()} vs {dh.team_home.info.nickname[0].capitalize()}: {y_pred[0]:.2f} points\n")

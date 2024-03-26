@@ -23,6 +23,9 @@ class DataHandler:
         self.team_away = Team.set_team(season=self.cur_season, name=input("Away Team: ").lower())
         self.team_home = Team.set_team(season=self.cur_season, name=input("Home Team: ").lower())
         
+        if (not self.team_away or not self.team_home):
+            return False
+        
         X_pred = pd.concat([self.team_away.stats.add_suffix("_A"), self.team_home.stats.add_suffix("_H")], axis=1).drop(columns=self.columns_to_drop[:-1])
         return X_pred
         
