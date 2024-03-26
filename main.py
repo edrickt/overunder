@@ -8,7 +8,7 @@ if __name__ == "__main__":
     
     while True:
             X_pred = dh.input_teams_get_X_pred()
-            if X_pred is False:
+            if (X_pred is False):
                 print("Bad Input\n")
                 continue
 
