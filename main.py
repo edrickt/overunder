@@ -24,8 +24,9 @@ if __name__ == "__main__":
         
         mlpregressor = NNMLPRegressor()
         mlpregressor.fit(X, y)
+        mlpregressor_score = mlpregressor.get_score()
         
         y_pred = mlpregressor.predict(X_pred)
     
-        print(f"{dh.team_away.info.nickname[0].capitalize()} vs {dh.team_home.info.nickname[0].capitalize()}: {y_pred[0]:.2f} points\n")
-            
+        print(f"{dh.team_away.info.nickname[0].capitalize()} vs {dh.team_home.info.nickname[0].capitalize()}: {y_pred[0]:.2f} points")
+        print(f"MLPRegressor MSE: {mlpregressor_score}\n")
