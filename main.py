@@ -5,7 +5,8 @@ from sklearn.svm import SVR
 
 if __name__ == "__main__":
     # Load data. Will create the game_logs.csv, game_logs_metrics.csv, and team_stats.csv for up the past num_years
-    # Has the X and y dataframes can be accessed by dh.X and dh.y, for fitting the model.
+    # Has the X and y dataframes can be accessed by dh.X and dh.y, for fitting the model. Will not create the a csv
+    # file if it is already present.
     dh = DataHandler(num_years=5)
     
     while True:
