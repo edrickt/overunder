@@ -17,9 +17,14 @@ if __name__ == "__main__":
         
         X_pred = dh.get_X_pred(team_away_name=team_away_name, team_home_name=team_home_name)
         
-        # dh.input_teams_get_X_pred() will return false if bad input
+        # dh.get_X_pred() will return false if bad input
+        if (X_pred is False):
+            print("Bad Input\n")
+            continue
+        
         mlpregressor = NNMLPRegressor()
         mlpregressor.fit(X, y)
+        
         y_pred = mlpregressor.predict(X_pred)
     
         print(f"{dh.team_away.info.nickname[0].capitalize()} vs {dh.team_home.info.nickname[0].capitalize()}: {y_pred[0]:.2f} points\n")
