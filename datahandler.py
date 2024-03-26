@@ -2,8 +2,10 @@ from game import Game
 from team import Team
 from helperfunctions import get_seasons
 import pandas as pd
-from sklearn.tree import DecisionTreeRegressor
 
+# Class to handle the data and return it in machine learning model friendly dataframes for sklearn. Upon instantiating a DataHandler class which takes in num_years
+# as an argument to specify how many years to get data from, it calls the _load_data function to create the necessary csv files to prevent having to use API calls
+# unnecessarily. Afterwards, it sets the X and y dataframes for sklearn as a class attribute along with team_away stats and info and team_home stats and info.
 
 class DataHandler:
     def __init__(self, num_years):
@@ -14,6 +16,7 @@ class DataHandler:
         self.team_away = None
         self.team_home = None
         self.cur_season = get_seasons()[0]
+
         self.columns_to_drop = ["TEAM_NAME_A", "TEAM_NAME_H", "TEAM_ID_A", "TEAM_ID_H", "GP_A", "GP_H", "W_A", "W_H", "L_A", "L_H", "SEASON_A", "SEASON_H", "TOTAL_POINTS"]
         
         self._load_data()

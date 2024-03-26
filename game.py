@@ -4,6 +4,9 @@ from team import Team
 import time
 import pandas as pd
 
+# The Game class is responsible for getting game logs to create the dataframe for training the model. It is able to get the game logs for n season
+# using the get_game_logs function, as well as getting the team metrics for each game using the get_team_metrics_for_games function, which takes
+# in the dataframe that get_game_logs creates. Both functions first try to read from the csv file, and if not present, will create them.
 
 class Game:
     @staticmethod

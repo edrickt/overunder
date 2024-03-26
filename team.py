@@ -4,6 +4,10 @@ from helperfunctions import get_seasons
 import time
 import pandas as pd
 
+# The team object holds a team's name, id, the dataframe for its info, and the dataframe for its stats. A team can be created through
+# set_team which needs a season to pull the team's stats from, as well as either the name of the team or the team's id. It will only
+# read from a csv file which should be created upon creating an instance of DataHandler.
+
 class Team:
     def __init__(self, name=None, team_id=None):
         self.name = name
