@@ -10,6 +10,8 @@ if __name__ == "__main__":
     
     while True:
         # Get the dataframe for two teams with the dataframe formatted for prediction
+        X = dh.X
+        y = dh.y
         X_pred = dh.input_teams_get_X_pred()
         
         # dh.input_teams_get_X_pred() will return false if bad input
@@ -17,7 +19,7 @@ if __name__ == "__main__":
             print("Bad Input\n")
             continue
 
-        model = LinearRegression().fit(dh.X, dh.y)
+        model = LinearRegression().fit(X, y)
         y_pred = model.predict(X_pred)
 
         print(f"{dh.team_away.info.nickname[0].capitalize()} vs {dh.team_home.info.nickname[0].capitalize()}: {y_pred[0]:.2f} points\n")
