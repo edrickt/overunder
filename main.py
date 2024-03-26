@@ -30,3 +30,4 @@ if __name__ == "__main__":
     
         print(f"{dh.team_away.info.nickname[0].capitalize()} vs {dh.team_home.info.nickname[0].capitalize()}: {y_pred[0]:.2f} points")
         print(f"MLPRegressor MSE: {mlpregressor_score}\n")
+        
