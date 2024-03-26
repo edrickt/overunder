@@ -8,7 +8,7 @@ import pandas as pd
 # unnecessarily. Afterwards, it sets the X and y dataframes for sklearn as a class attribute along with team_away stats and info and team_home stats and info.
 
 class DataHandler:
-    def __init__(self, num_years):
+    def __init__(self, num_years=5):
         self.num_years = num_years
         self.game_metrics = None
         self.X = None
