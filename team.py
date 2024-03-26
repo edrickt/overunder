@@ -10,34 +10,7 @@ class Team:
         self.team_id = team_id
         self.info = None
         self.stats = None
-
-    def _get_team_info(self):
-        if (self.name):
-            if (len(self.name) == 3):
-                info = pd.Dataframe([find_team_by_abbreviation(self.name)])
-            else:
-                info = pd.DataFrame.from_dict(find_teams_by_full_name(self.name))
-        else:
-            info = pd.DataFrame([find_team_name_by_id(self.team_id)])
-        return info
-
-    def _get_team_stats_by_info(self, num_years):
-        years = get_seasons(num_years)
-
-        team_id = self.info["id"][0]
-        stats_log = []
-
-        for year in years:
-            stats = teamestimatedmetrics.TeamEstimatedMetrics(season=year).get_data_frames()[0]
-            time.sleep(0.6)
-            stats.insert(loc=7, column="SEASON", value=year)
-            stats = stats[stats["TEAM_ID"] == team_id].reset_index(drop=True)
-            stats_log.append(stats)
-
-        stats_log = pd.concat(stats_log).reset_index(drop=True)
-
-        return stats_log
-
+        
     @staticmethod
     def set_team(season, name=None, team_id=None):
         try:
@@ -65,6 +38,33 @@ class Team:
         team.info, team.stats = info, stats
 
         return team
+
+    def _get_team_info(self):
+        if (self.name):
+            if (len(self.name) == 3):
+                info = pd.Dataframe([find_team_by_abbreviation(self.name)])
+            else:
+                info = pd.DataFrame.from_dict(find_teams_by_full_name(self.name))
+        else:
+            info = pd.DataFrame([find_team_name_by_id(self.team_id)])
+        return info
+
+    def _get_team_stats_by_info(self, num_years):
+        years = get_seasons(num_years)
+
+        team_id = self.info["id"][0]
+        stats_log = []
+
+        for year in years:
+            stats = teamestimatedmetrics.TeamEstimatedMetrics(season=year).get_data_frames()[0]
+            time.sleep(0.6)
+            stats.insert(loc=7, column="SEASON", value=year)
+            stats = stats[stats["TEAM_ID"] == team_id].reset_index(drop=True)
+            stats_log.append(stats)
+
+        stats_log = pd.concat(stats_log).reset_index(drop=True)
+
+        return stats_log
 
     @staticmethod
     def _get_team(num_years, name=None, team_id=None):

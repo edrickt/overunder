@@ -6,7 +6,8 @@ from sklearn.tree import DecisionTreeRegressor
 
 
 class DataHandler:
-    def __init__(self):
+    def __init__(self, num_years):
+        self.num_years = num_years
         self.game_metrics = None
         self.X = None
         self.y = None
@@ -25,9 +26,9 @@ class DataHandler:
         X_pred = pd.concat([self.team_away.stats.add_suffix("_A"), self.team_home.stats.add_suffix("_H")], axis=1).drop(columns=self.columns_to_drop[:-1])
         return X_pred
         
-    def _load_data(self, num_years=5):
-        Team.team_stats_to_csv(num_years=num_years)
-        game_logs = Game.get_game_logs(num_years=num_years)
+    def _load_data(self):
+        Team.team_stats_to_csv(num_years=self.num_years)
+        game_logs = Game.get_game_logs(num_years=self.num_years)
         self.game_metrics = Game.get_team_metrics_for_games(game_logs)
         
     def _set_X_y(self):
