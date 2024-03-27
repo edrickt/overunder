@@ -1,25 +1,38 @@
-from game import Game
-from team import Team
-import pandas as pd
-from sklearn.linear_model import LinearRegression
+from simpleDecisionTree import DecisionTree
+from datahandler import DataHandler
 
 
 if __name__ == "__main__":
+
+    dh = DataHandler()
+    dh.load_data()
+    dh.set_X_y()
+
+
     while True:
-            team_away = Team.set_team(input("Away Team: ").lower())
-            team_home = Team.set_team(input("Home Team: ").lower())
 
-            game_logs = Game.get_game_logs()
-            game_metrics = Game.get_team_metrics_for_games(game_logs)
+        # Get the dataframe for two teams with the dataframe formatted for prediction
+        X = dh.X
+        y = dh.y
 
-            columns_to_drop = ["TEAM_NAME_A", "TEAM_NAME_H", "TEAM_ID_A", "TEAM_ID_H", "GP_A", "GP_H", "W_A", "W_H", "L_A", "L_H", "TOTAL_POINTS"]
+        team_away_name = input("Away team: ")
+        team_home_name = input("Home team: ")
 
-            X = game_metrics.drop(columns=columns_to_drop)
-            y = game_metrics["TOTAL_POINTS"]
+        X_pred = dh.get_X_pred(team_away_name=team_away_name, team_home_name=team_home_name)
 
-            model = LinearRegression().fit(X, y)
+        # dh.get_X_pred() will return false if bad input
 
-            X_pred = pd.concat([team_away.stats.add_suffix("_A"), team_home.stats.add_suffix("_H")], axis=1).drop(columns=columns_to_drop[:-1])
-            y_pred = model.predict(X_pred)
+        if (X_pred is False):
+            print("Bad Input\n")
+            continue
+        
+        decisionTree = DecisionTree()
+        decisionTree.fit(dh.X, dh.y)
 
-            print(f"{team_away.info.nickname[0].capitalize()} vs {team_home.info.nickname[0].capitalize()}: {y_pred[0]:.2f} points\n")
+        decisionTree_score = decisionTree.get_score()
+
+        y_pred = decisionTree.predict(X_pred)
+
+        print(f"{dh.team_away.info.nickname[0].capitalize()} vs {dh.team_home.info.nickname[0].capitalize()}: {y_pred[0]:.2f} points")
+        print(f"Simple Decision Tree MSE: {decisionTree_score:.2f}\n")        
+        

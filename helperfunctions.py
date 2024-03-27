@@ -1,6 +1,8 @@
 from datetime import datetime
 
-def get_years(num_years):
+# Get an array of the seasons given the number of seasons that we want
+# formatted for the API.
+def get_seasons(num_years=1):
     cur_year = datetime.now().year
     years = []
     for i in range(0, num_years):

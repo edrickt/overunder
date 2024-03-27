@@ -1,5 +1,5 @@
 from nba_api.stats.endpoints import leaguegamelog
-from helperfunctions import get_years
+from helperfunctions import get_seasons
 from team import Team
 import pandas as pd
 
@@ -11,7 +11,7 @@ class Game:
             game_log = pd.read_csv("game_log.csv", index_col=False)
             return game_log
         except:
-            years = get_years(num_games//82+2)
+            years = get_seasons(num_games//82+2)
             game_log = []
 
             num_games = num_games*2
