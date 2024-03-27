@@ -6,6 +6,8 @@ if __name__ == "__main__":
     # Has the X and y dataframes can be accessed by dh.X and dh.y, for fitting the model. Will not create the a csv
     # file if it is already present.
     dh = DataHandler()
+    dh.load_data()
+    dh.set_X_y()
     
     while True:
         # Get the dataframe for two teams with the dataframe formatted for prediction
