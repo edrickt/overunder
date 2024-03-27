@@ -9,10 +9,12 @@ class DecisionTree:
 
         self.X = None
         self.y = None
-        self.model = None
+        self.model = DecisionTreeClassifier()
 
     def fit(self, X, y):
-        self.model = DecisionTreeClassifier()
+        self.X = X
+        self.y = y
+        self.model.fit(X, y) 
 
     def predict(self, X_pred):
         y_pred = self.model.predict(X_pred)
@@ -21,6 +23,4 @@ class DecisionTree:
     def get_score(self, X_test, y_test):
 
         y_pred = self.model.predict(X_test)
-        score = metrics.accuracy_score(y_test, y_pred)
-
-        return score 
+        return metrics.accuracy_score(y_test, y_pred)
