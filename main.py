@@ -16,6 +16,11 @@ if __name__ == "__main__":
         
         team_away_name = input("Away team: ")
         team_home_name = input("Home team: ")
+        try:
+            overunder_line = float(input("Vegas line: "))
+        except:
+            print("Bad Input\n")
+            continue
         
         X_pred = dh.get_X_pred(team_away_name=team_away_name, team_home_name=team_home_name)
         
@@ -32,5 +37,6 @@ if __name__ == "__main__":
         y_pred = mlpregressor.predict(X_pred)
     
         print(f"{dh.team_away.info.nickname[0].capitalize()} vs {dh.team_home.info.nickname[0].capitalize()}: {y_pred[0]:.2f} points")
+        print(f"Percent dif: {(y_pred[0]/overunder_line-1)*100:.2f}%")
         print(f"MLPRegressor MSE: {mlpregressor_score:.2f}\n")
         
