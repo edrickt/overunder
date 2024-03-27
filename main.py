@@ -22,12 +22,13 @@ if __name__ == "__main__":
             print("Bad Input\n")
             continue
         
-        mlpregressor = NNMLPRegressor()
+        mlpregressor = NNMLPRegressor(hidden_layer_sizes=(100,50), alpha=0.001)
         mlpregressor.fit(X, y)
+        # mlpregressor.output_optimized_parameters()
         mlpregressor_score = mlpregressor.get_score()
         
         y_pred = mlpregressor.predict(X_pred)
     
         print(f"{dh.team_away.info.nickname[0].capitalize()} vs {dh.team_home.info.nickname[0].capitalize()}: {y_pred[0]:.2f} points")
-        print(f"MLPRegressor MSE: {mlpregressor_score}\n")
+        print(f"MLPRegressor MSE: {mlpregressor_score:.2f}\n")
         
