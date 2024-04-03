@@ -1,18 +1,15 @@
-from sklearn.neural_network import MLPRegressor
+from sklearn.linear_model import ElasticNet
 from sklearn.model_selection import GridSearchCV, cross_val_score
 import numpy as np
 
-class NNMLPRegressor:
-    def __init__(self, hidden_layer_sizes=(50,50), alpha=0.0001):
-        self.hidden_layer_sizes = hidden_layer_sizes
-        self.alpha = alpha
-        
+class ENet:
+    def __init__(self):
         self.X = None
         self.y = None
         self.model = None
     
     def fit(self, X, y):
-        self.model = MLPRegressor(hidden_layer_sizes=self.hidden_layer_sizes, alpha=self.alpha)
+        self.model = ElasticNet()
         self.model.fit(X, y)
         self.X = X
         self.y = y
@@ -27,13 +24,11 @@ class NNMLPRegressor:
     
     def output_optimized_parameters(self):
         parameters = {
-                    "hidden_layer_sizes": [(50,), (50, 50), (100,), (100, 100), (100, 50), (50, 100), (50, 50, 50)],
-                    "alpha": np.logspace(-5, -3, 5) 
         } 
-        model = MLPRegressor(max_iter=10000)
+        model = ElasticNet(max_iter=10000)
         grid = GridSearchCV(model, parameters, cv=10)
         grid.fit(self.X, self.y)
 
-        file = open("mlpregressor_optimize.txt", "w+")
+        file = open("elasticnet_regressor.txt", "w+")
         parameter_string = ",".join("{}={}".format(*i) for i in grid.best_params_.items())
         file.write(parameter_string)

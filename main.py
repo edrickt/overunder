@@ -1,5 +1,6 @@
 from datahandler import DataHandler
-from neuralnetwork import NNMLPRegressor
+from elasticnet import ENet
+
 
 if __name__ == "__main__":
     # Load data. Will create the game_logs.csv, game_logs_metrics.csv, and team_stats.csv for up the past num_years
@@ -29,14 +30,14 @@ if __name__ == "__main__":
             print("Bad Input\n")
             continue
         
-        mlpregressor = NNMLPRegressor(hidden_layer_sizes=(100,50), alpha=0.001)
-        mlpregressor.fit(X, y)
+        model = ENet()
+        model.fit(X, y)
         # mlpregressor.output_optimized_parameters()
-        mlpregressor_score = mlpregressor.get_score()
+        score = model.get_score()
         
-        y_pred = mlpregressor.predict(X_pred)
+        y_pred = model.predict(X_pred)        
     
         print(f"{dh.team_away.info.nickname[0].capitalize()} vs {dh.team_home.info.nickname[0].capitalize()}: {y_pred[0]:.2f} points")
         print(f"Percent dif: {(y_pred[0]/overunder_line-1)*100:.2f}%")
-        print(f"MLPRegressor MSE: {mlpregressor_score:.2f}\n")
+        print(f"MLPRegressor MSE: {score:.2f}\n")
         
