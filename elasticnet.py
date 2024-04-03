@@ -3,13 +3,17 @@ from sklearn.model_selection import GridSearchCV, cross_val_score
 import numpy as np
 
 class ENet:
-    def __init__(self):
+    def __init__(self, alpha=1, l1_ratio=0.90, tol=0.001):
+        self.alpha = alpha
+        self.l1_ratio = l1_ratio
+        self.tol = tol
+        
         self.X = None
         self.y = None
         self.model = None
     
     def fit(self, X, y):
-        self.model = ElasticNet()
+        self.model = ElasticNet(alpha=self.alpha, l1_ratio=self.l1_ratio, tol=self.tol)
         self.model.fit(X, y)
         self.X = X
         self.y = y
@@ -24,7 +28,10 @@ class ENet:
     
     def output_optimized_parameters(self):
         parameters = {
-        } 
+                'alpha'     : [0.1,1,10,0.01],
+                'l1_ratio'  :  np.arange(0.40,1.00,0.10),
+                'tol'       : [0.0001,0.001]
+            }
         model = ElasticNet(max_iter=10000)
         grid = GridSearchCV(model, parameters, cv=10)
         grid.fit(self.X, self.y)

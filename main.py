@@ -32,12 +32,9 @@ if __name__ == "__main__":
         
         model = ENet()
         model.fit(X, y)
-        # mlpregressor.output_optimized_parameters()
-        score = model.get_score()
         
         y_pred = model.predict(X_pred)        
     
         print(f"{dh.team_away.info.nickname[0].capitalize()} vs {dh.team_home.info.nickname[0].capitalize()}: {y_pred[0]:.2f} points")
-        print(f"Percent dif: {(y_pred[0]/overunder_line-1)*100:.2f}%")
-        print(f"MLPRegressor MSE: {score:.2f}\n")
+        print(f"Percent dif: {(y_pred[0]/overunder_line-1)*100:.2f}%\n")
         
