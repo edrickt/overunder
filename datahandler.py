@@ -29,8 +29,9 @@ class DataHandler:
         X_pred = pd.concat([self.team_away.stats.add_suffix("_A"), self.team_home.stats.add_suffix("_H")], axis=1).drop(columns=self.columns_to_drop[:-1])
         return X_pred
         
-    def load_data(self):
-        Team.team_stats_to_csv(num_years=self.num_years)
+    def load_data(self, update_team=False):
+        if (update_team):
+            Team.team_stats_to_csv(num_years=self.num_years)
         game_logs = Game.get_game_logs(num_years=self.num_years)
         self.game_metrics = Game.get_team_metrics_for_games(game_logs)
         

@@ -50,6 +50,12 @@ class Team:
     def team_stats_to_csv(num_years):
         try:
             all_teams = pd.read_csv("team_stats.csv", index_col=False)
+            teams = get_teams()
+            team_stats = []
+            for team in teams:
+                cur_team = Team()._get_team(1, team_id=team["id"])
+                cur_season = get_seasons()[0]
+                all_teams = all_teams[all_teams["TEAM_ID"] == cur_team.team_id and all_teams["SEASON"] == cur_season]
         except:
             teams = get_teams()
             team_stats = []
@@ -60,7 +66,8 @@ class Team:
                     team_stats.append(pd.concat([cur_team.info.reset_index(drop=True), cur_team.stats.loc[[i]].reset_index(drop=True)], axis=1))
 
             team_stats = pd.concat(team_stats).reset_index(drop=True).map(lambda s: s.lower() if type(s) == str else s)
-            team_stats.to_csv("team_stats.csv", index=False)
+        
+        team_stats.to_csv("team_stats.csv", index=False)
             
     @staticmethod
     def _get_team(num_years, name=None, team_id=None):

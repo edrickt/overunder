@@ -7,7 +7,7 @@ if __name__ == "__main__":
     # Has the X and y dataframes can be accessed by dh.X and dh.y, for fitting the model. Will not create the a csv
     # file if it is already present.
     dh = DataHandler()
-    dh.load_data()
+    dh.load_data(update_team=False)
     dh.set_X_y()
     
     while True:
