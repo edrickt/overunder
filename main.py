@@ -1,6 +1,6 @@
-<<<<<<< HEAD
 from datahandler import DataHandler
 from elasticnet import ENet
+from linearregression import LinReg
 
 
 if __name__ == "__main__":
@@ -31,7 +31,7 @@ if __name__ == "__main__":
             print("Bad Input\n")
             continue
         
-        model = ENet()
+        model = LinReg()
         model.fit(X, y)
         
         y_pred = model.predict(X_pred)        
@@ -39,7 +39,6 @@ if __name__ == "__main__":
         print(f"{dh.team_away.info.nickname[0].capitalize()} vs {dh.team_home.info.nickname[0].capitalize()}: {y_pred[0]:.2f} points")
         print(f"Percent dif: {(y_pred[0]/overunder_line-1)*100:.2f}%\n")
         
-=======
 from game import Game
 from team import Team
 from helperfunctions import get_seasons
@@ -73,4 +72,4 @@ if __name__ == "__main__":
             print(f"{team_away.info.nickname[0].capitalize()} vs {team_home.info.nickname[0].capitalize()}: {y_pred[0]:.2f} points\n")
             
             # p value analysis and look at simple decision tree, if around 3000 datapoints then can experiment neural network
->>>>>>> hoping
+
