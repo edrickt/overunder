@@ -1,5 +1,5 @@
 from datahandler import DataHandler
-from elasticnet import ENet
+#from elasticnet import ENet
 from linearregression import LinReg
 
 
@@ -34,10 +34,14 @@ if __name__ == "__main__":
         model = LinReg()
         model.fit(X, y)
         
-        y_pred = model.predict(X_pred)        
+        y_pred = model.predict(X_pred)
+        
+        est = model.get_pvalues()        
     
         print(f"{dh.team_away.info.nickname[0].capitalize()} vs {dh.team_home.info.nickname[0].capitalize()}: {y_pred[0]:.2f} points")
         print(f"Percent dif: {(y_pred[0]/overunder_line-1)*100:.2f}%\n")
+        print("P-Value Analysis: \n")
+        print(est.summary())
         
 from game import Game
 from team import Team
