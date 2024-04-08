@@ -7,10 +7,12 @@ class LinReg:
         self.X = None
         self.y = None
         self.model = LinearRegression()
+
     def fit(self, X, y):
         self.X = X
         self.y = y
         self.model.fit(X, y) 
+
     def predict(self, X_pred):
         y_pred = self.model.predict(X_pred)
         return y_pred
