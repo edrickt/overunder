@@ -2,6 +2,7 @@ from sklearn.linear_model import ElasticNet
 from sklearn.model_selection import GridSearchCV, cross_val_score
 import numpy as np
 
+
 class ENet:
     def __init__(self, alpha=1, l1_ratio=0.90, tol=0.001):
         self.alpha = alpha
