@@ -1,9 +1,12 @@
-from sklearn.linear_model import LinearRegression
+import pandas as pd
+from sklearn.tree import LinearRegression
+from sklearn.model_selection import train_test_split
 from sklearn import metrics 
 
 
 class LinearRegression:
     def __init__(self):
+
         self.X = None
         self.y = None
         self.model = LinearRegression()
@@ -18,5 +21,6 @@ class LinearRegression:
         return y_pred
     
     def get_score(self, X_test, y_test):
+
         y_pred = self.model.predict(X_test)
         return metrics.accuracy_score(y_test, y_pred)
