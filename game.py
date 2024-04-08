@@ -12,7 +12,7 @@ class Game:
     @staticmethod
     def get_game_logs(num_years):
         try:
-            game_log = pd.read_csv("game_log.csv", index_col=False)
+            game_log = pd.read_csv("csvs/game_log.csv", index_col=False)
             return game_log
         except:
             years = get_seasons(num_years)
@@ -25,13 +25,13 @@ class Game:
                 game_log.append(games)
 
             game_log = pd.concat(game_log).reset_index(drop=True)
-            game_log.to_csv("game_log.csv", index=False)
+            game_log.to_csv("csvs/game_log.csv", index=False)
             return game_log
     
     @staticmethod
     def get_team_metrics_for_games(game_log):
         try:
-            game_metrics = pd.read_csv("game_logs_metrics.csv", index_col=False)
+            game_metrics = pd.read_csv("csvs/game_logs_metrics.csv", index_col=False)
             return game_metrics
         except:
             game_metrics = []
@@ -50,5 +50,5 @@ class Game:
                 game_metrics.append(combined_stats)
                 
             game_metrics = pd.concat(game_metrics, axis=0).reset_index(drop=True)
-            game_metrics.to_csv("game_logs_metrics.csv", index=False)
+            game_metrics.to_csv("csvs/game_logs_metrics.csv", index=False)
             return game_metrics

@@ -1,5 +1,5 @@
 from datahandler import DataHandler
-from elasticnet import ENet
+from models.elasticnet import ENet
 
 
 if __name__ == "__main__":
