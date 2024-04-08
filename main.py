@@ -1,4 +1,4 @@
-from datahandler import DataHandler
+from objects.datahandler import DataHandler
 from models.elasticnet import ENet
 
 

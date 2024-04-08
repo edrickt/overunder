@@ -1,6 +1,6 @@
-from game import Game
-from team import Team
-from helperfunctions import get_seasons
+from objects.game import Game
+from objects.team import Team
+from misc.helperfunctions import get_seasons
 import pandas as pd
 
 # Class to handle the data and return it in machine learning model friendly dataframes for sklearn. Upon instantiating a DataHandler class which takes in num_years

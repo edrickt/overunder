@@ -1,6 +1,6 @@
 from nba_api.stats.static.teams import find_team_by_abbreviation, find_team_name_by_id, find_teams_by_full_name, get_teams
 from nba_api.stats.endpoints import teamestimatedmetrics
-from helperfunctions import get_seasons
+from misc.helperfunctions import get_seasons
 import time
 import pandas as pd
 

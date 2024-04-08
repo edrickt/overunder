@@ -1,6 +1,6 @@
 from nba_api.stats.endpoints import leaguegamelog
-from helperfunctions import get_seasons
-from team import Team
+from misc.helperfunctions import get_seasons
+from objects.team import Team
 import time
 import pandas as pd
 
