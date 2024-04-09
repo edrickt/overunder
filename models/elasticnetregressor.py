@@ -29,14 +29,13 @@ class ENet:
     
     def output_optimized_parameters(self):
         parameters = {
-                'alpha'     : [0.1,1,10,0.01],
-                'l1_ratio'  :  np.arange(0.40,1.00,0.10),
-                'tol'       : [0.0001,0.001]
+                    'alpha': [1.0, 0.1, 0.01],
+                    'l1_ratio': [0.1, 0.3, 0.5, 0.7, 0.9]
             }
         model = ElasticNet(max_iter=10000)
         grid = GridSearchCV(model, parameters, cv=10)
         grid.fit(self.X, self.y)
 
-        file = open("elasticnet_regressor.txt", "w+")
+        file = open("models/elasticnet_regressor.txt", "w+")
         parameter_string = ",".join("{}={}".format(*i) for i in grid.best_params_.items())
         file.write(parameter_string)

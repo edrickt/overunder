@@ -2,6 +2,7 @@ from sklearn.neural_network import MLPRegressor
 from sklearn.model_selection import GridSearchCV, cross_val_score
 import numpy as np
 
+
 class NNMLPRegressor:
     def __init__(self, hidden_layer_sizes=(50,50), alpha=0.0001):
         self.hidden_layer_sizes = hidden_layer_sizes
@@ -27,13 +28,13 @@ class NNMLPRegressor:
     
     def output_optimized_parameters(self):
         parameters = {
-                    "hidden_layer_sizes": [(50,), (50, 50), (100,), (100, 100), (100, 50), (50, 100), (50, 50, 50)],
-                    "alpha": np.logspace(-5, -3, 5) 
+                    'hidden_layer_sizes': [(50,), (100,), (50, 50), (100, 100)],
+                    'alpha': [0.0001, 0.001, 0.01]
         } 
         model = MLPRegressor(max_iter=10000)
         grid = GridSearchCV(model, parameters, cv=10)
         grid.fit(self.X, self.y)
 
-        file = open("mlpregressor_optimize.txt", "w+")
+        file = open("models/mlpregressor_optimize.txt", "w+")
         parameter_string = ",".join("{}={}".format(*i) for i in grid.best_params_.items())
         file.write(parameter_string)

@@ -1,5 +1,6 @@
 from objects.datahandler import DataHandler
-from models.elasticnet import ENet
+from models.elasticnetregressor import ENet
+from models.randomforestregressor import RandForestRegressor
 
 
 if __name__ == "__main__":
@@ -30,8 +31,9 @@ if __name__ == "__main__":
             print("Bad Input\n")
             continue
         
-        model = ENet()
+        model = RandForestRegressor()
         model.fit(X, y)
+        # model.output_optimized_parameters()
         
         y_pred = model.predict(X_pred)        
     
