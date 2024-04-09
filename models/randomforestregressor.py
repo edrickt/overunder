@@ -4,13 +4,17 @@ import numpy as np
 
 
 class RandForestRegressor:
-    def __init__(self):     
+    def __init__(self, max_depth=10, min_samples_leaf=4, min_samples_split=10, n_estimators=100):
+        self.max_depth = max_depth
+        self.min_samples_leaf = min_samples_leaf
+        self.min_samples_split = min_samples_split
+        self.n_estimators = n_estimators
         self.X = None
         self.y = None
         self.model = None
     
     def fit(self, X, y):
-        self.model = RandomForestRegressor()
+        self.model = RandomForestRegressor(max_depth=self.max_depth, min_samples_leaf=self.min_samples_leaf, min_samples_split=self.min_samples_split, n_estimators=self.n_estimators)
         self.model.fit(X, y)
         self.X = X
         self.y = y
