@@ -23,3 +23,5 @@ class DecisionTree:
         y_pred = self.model.predict(X_test)
         return metrics.accuracy_score(y_test, y_pred)
     
+    # ccp_alpha, max_depth
+    
