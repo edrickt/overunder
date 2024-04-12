@@ -1,5 +1,5 @@
 import pandas as pd
-from sklearn.tree import DecisionTreeClassifier
+from sklearn.tree import DecisionTreeRegressor
 from sklearn.model_selection import train_test_split
 from sklearn import metrics 
 
@@ -8,7 +8,7 @@ class DecisionTree:
     def __init__(self):
         self.X = None
         self.y = None
-        self.model = DecisionTreeClassifier()
+        self.model = DecisionTreeRegressor()
 
     def fit(self, X, y):
         self.X = X
