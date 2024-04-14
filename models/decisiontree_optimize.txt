@@ -1,1 +1,1 @@
-ccp_alpha=0,max_depth=None
+max_depth=3,min_samples_leaf=1,min_samples_split=2

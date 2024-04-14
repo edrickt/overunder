@@ -27,13 +27,13 @@ if __name__ == "__main__":
     # enet.output_optimized_parameters()
     # randforestreg.output_optimized_parameters()
     # mlpreg.output_optimized_parameters()
-    decisiontree.output_optimized_parameters()
+    # decisiontree.output_optimized_parameters()
     
     enet_score = enet.get_score()
     linreg_score = linreg.get_score()
     randforestreg_score = randforestreg.get_score()
     mlpreg_score = mlpreg.get_score()
-    decisiontree_score = mlpreg.get_score()
+    decisiontree_score = decisiontree.get_score()
     
     print("MSE SCORES")
     print(f"ElasticNet: {enet_score}")

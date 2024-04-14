@@ -1,6 +1,5 @@
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import GridSearchCV, cross_val_score
-import numpy as np
 
 
 class RandForestRegressor:
