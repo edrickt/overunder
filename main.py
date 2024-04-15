@@ -1,6 +1,5 @@
 from objects.datahandler import DataHandler
 from models.elasticnetregressor import ENet
-from models.randomforestregressor import RandForestRegressor
 
 
 if __name__ == "__main__":
@@ -11,11 +10,14 @@ if __name__ == "__main__":
     dh.load_data(update_team=False)
     dh.set_X_y()
     
-    while True:
-        # Get the dataframe for two teams with the dataframe formatted for prediction
-        X = dh.X
-        y = dh.y
-        
+    # Get the dataframe for two teams with the dataframe formatted for prediction
+    X = dh.X
+    y = dh.y
+    
+    model = ENet()
+    model.fit(X, y)
+    
+    while True:        
         team_away_name = input("Away team: ")
         team_home_name = input("Home team: ")
         try:
@@ -31,9 +33,7 @@ if __name__ == "__main__":
             print("Bad Input\n")
             continue
         
-        model = RandForestRegressor()
-        model.fit(X, y)
-        # model.output_optimized_parameters()
+        print(X_pred)
         
         y_pred = model.predict(X_pred)        
     
