@@ -3,10 +3,12 @@ from objects.datahandler import DataHandler
 from sklearn.linear_model import LogisticRegression
 from misc.helperfunctions import get_seasons
 from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import accuracy_score, precision_score, f1_score
 from objects.team import Team
 import pandas as pd
 import pickle
+import numpy as np
 
 
 def build_csv():
@@ -58,11 +60,21 @@ if __name__ == "__main__":
     X = df.drop(["OVER"], axis=1)
     y = df["OVER"]
     
-    model = LogisticRegression(max_iter=10000).fit(X, y)
+    model = LogisticRegression(max_iter=100000).fit(X, y)
     
-    accuracy = cross_val_score(model, X, y, scoring='accuracy')
-    precision = cross_val_score(model, X, y, scoring='precision')
-    f1 = cross_val_score(model, X, y, scoring='f1')
+    parameters = {
+        "penalty" : ["l1", "l2", "elasticnet", "none"],
+        "C" : [.5, 1, 1.5, 2, 2.5, 3],
+        "solver" : ["lbfgs","newton-cg","liblinear","sag","saga"],
+    }
+
+    grid = GridSearchCV(model, parameters)
+    grid.fit(X, y)
+    print(grid.best_params_)
+    
+    accuracy = cross_val_score(model, X, y, scoring="accuracy")
+    precision = cross_val_score(model, X, y, scoring="precision")
+    f1 = cross_val_score(model, X, y, scoring="f1")
     
     print("Classification Cross Validation Results:")
     print(f"Accuracy: {accuracy.mean()*100:.2f}%")
