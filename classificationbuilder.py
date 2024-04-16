@@ -69,5 +69,5 @@ if __name__ == "__main__":
     print(f"Precision: {precision.mean()*100:.2f}%")
     print(f"F1 Score: {f1.mean()*100:.2f}%")
     
-    with open("modelspickle/team_overunder_classifier.pkl", "wb") as f:
-        pickle.dump(model, f)
+    # with open("modelspickle/team_overunder_classifier.pkl", "wb") as f:
+    #     pickle.dump(model, f)

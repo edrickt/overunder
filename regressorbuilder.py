@@ -25,8 +25,8 @@ if __name__ == "__main__":
     mlpreg.fit(X, y)
     decisiontree.fit(X, y)
     
-    with open("modelspickle/team_overunder_regressor.pkl", "wb") as f:
-        pickle.dump(enet, f)
+    # with open("modelspickle/team_overunder_regressor.pkl", "wb") as f:
+    #     pickle.dump(enet, f)
     
     # enet.output_optimized_parameters()
     # randforestreg.output_optimized_parameters()
