@@ -60,19 +60,19 @@ if __name__ == "__main__":
     X = df.drop(["OVER"], axis=1)
     y = df["OVER"]
     
-    model = LogisticRegression(max_iter=100000).fit(X, y)
+    model = LogisticRegression(max_iter=100000, C=3, penalty="l2", solver="liblinear").fit(X, y)
     
-    parameters = {
-        "penalty" : ["l1", "l2", "elasticnet", "none"],
-        "C" : [.5, 1, 1.5, 2, 2.5, 3],
-        "solver" : ["lbfgs","newton-cg","liblinear","sag","saga"],
-    }
+    # parameters = {
+    #     "penalty" : ["l1", "l2", "elasticnet", "none"],
+    #     "C" : [.5, 1, 1.5, 2, 2.5, 3],
+    #     "solver" : ["lbfgs","newton-cg","liblinear","sag","saga"],
+    # }
 
-    grid = GridSearchCV(model, parameters)
-    grid.fit(X, y)
-    print(grid.best_params_)
+    # grid = GridSearchCV(model, parameters)
+    # grid.fit(X, y)
+    # print(grid.best_params_)
     
-    model = LogisticRegression(max_iter=100000, **grid.best_params_)
+    # model = LogisticRegression(max_iter=100000, **grid.best_params_)
     
     accuracy = cross_val_score(model, X, y, scoring="accuracy")
     precision = cross_val_score(model, X, y, scoring="precision")
@@ -83,5 +83,5 @@ if __name__ == "__main__":
     print(f"Precision: {precision.mean()*100:.2f}%")
     print(f"F1 Score: {f1.mean()*100:.2f}%")
     
-    # with open("modelspickle/team_overunder_classifier.pkl", "wb") as f:
-    #     pickle.dump(model, f)
+    with open("modelspickle/team_overunder_classifier.pkl", "wb") as f:
+        pickle.dump(model, f)
