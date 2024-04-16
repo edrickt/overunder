@@ -22,14 +22,14 @@ if __name__ == "__main__":
         try:
             overunder_line = float(input("      Vegas line: "))
         except:
-            print("Bad Input\n")
+            print("           Bad Input\n")
             continue
         
         X_pred = dh.get_X_pred(team_away_name=team_away_name, team_home_name=team_home_name)
         
         # dh.get_X_pred() will return false if bad input
         if (X_pred is False):
-            print("Bad Input\n")
+            print("           Bad Input\n")
             continue
         
         y_pred_regressor = regressor.predict(X_pred)
@@ -44,5 +44,6 @@ if __name__ == "__main__":
         
         print(f"Predicted points: {y_pred_regressor[0]:.2f} points")
         print(f"     Percent dif: {(y_pred_regressor[0]/overunder_line-1)*100:.2f}%")
+        print(f"*******************************")
         print(f"            Line: {'Over' if y_pred_classification else 'Under'}")
         print(f"     Probability: {y_pred_probability[1 if y_pred_classification else 0]*100:.2f}%\n")
