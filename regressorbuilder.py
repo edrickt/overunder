@@ -8,7 +8,7 @@ import pickle
 
 if __name__ == "__main__":
     dh = DataHandler()
-    dh.load_data(update_team=False)
+    dh.load_data()
     dh.set_X_y()
     
     X, y = dh.X, dh.y
@@ -25,8 +25,9 @@ if __name__ == "__main__":
     mlpreg.fit(X, y)
     decisiontree.fit(X, y)
     
-    with open("modelspickle/team_overunder_regressor.pkl", "wb") as f:
-        pickle.dump(enet, f)
+    # UNCOMMENT IF YOU WANT TO CREATE A NEW PICKLE FILE FOR REGRESSOR MODEL
+    # with open("modelspickle/team_overunder_regressor.pkl", "wb") as f:
+    #     pickle.dump(enet, f)
     
     # enet.output_optimized_parameters()
     # randforestreg.output_optimized_parameters()

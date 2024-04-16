@@ -30,13 +30,16 @@ class DataHandler:
         return X_pred
         
     def load_data(self, update_team=False):
+        print("LOADING team_stats.csv")
         try:
             teams = pd.read_csv("csvs/team_stats.csv")
         except:
             Team.team_stats_to_csv(num_years=self.num_years)
         if (update_team):
             Team.team_stats_to_csv(num_years=self.num_years)
+        print("LOADING game_logs.csv")
         game_logs = Game.get_game_logs(num_years=self.num_years)
+        print("LOADING game_logs_metrics.csv\n")
         self.game_metrics = Game.get_team_metrics_for_games(game_logs)
         
     def set_X_y(self):
