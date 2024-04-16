@@ -4,6 +4,7 @@ from models.linearregressor import LinearRegressor
 from models.randomforestregressor import RandForestRegressor
 from models.decisiontree import DecisionTree
 from objects.datahandler import DataHandler
+import pickle
 
 if __name__ == "__main__":
     dh = DataHandler()
@@ -41,4 +42,7 @@ if __name__ == "__main__":
     print(f"Random Forest: {randforestreg_score}")
     print(f"MLPRegressor: {mlpreg_score}")
     print(f"Decsion Tree: {decisiontree_score}")
+    
+    with open("modelspickle/team_overunder_regressor.pkl", "wb") as f:
+        pickle.dump(enet, f)
     

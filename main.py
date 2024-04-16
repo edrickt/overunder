@@ -1,5 +1,5 @@
 from objects.datahandler import DataHandler
-from models.elasticnetregressor import ENet
+import pickle
 
 
 if __name__ == "__main__":
@@ -10,12 +10,10 @@ if __name__ == "__main__":
     dh.load_data(update_team=False)
     dh.set_X_y()
     
-    # Get the dataframe for two teams with the dataframe formatted for prediction
-    X = dh.X
-    y = dh.y
-    
-    model = ENet()
-    model.fit(X, y)
+    with open("modelspickle/team_overunder_regressor.pkl", "rb") as f:
+        regressor = pickle.load(f)
+    with open("modelspickle/team_overunder_classifier.pkl", "rb") as f:
+        classifier = pickle.load(f)
     
     while True:        
         team_away_name = input("Away team: ")
@@ -33,9 +31,13 @@ if __name__ == "__main__":
             print("Bad Input\n")
             continue
         
-        print(X_pred)
+        y_pred_regressor = regressor.predict(X_pred)
         
-        y_pred = model.predict(X_pred)        
-    
-        print(f"{dh.team_away.info.nickname[0].capitalize()} vs {dh.team_home.info.nickname[0].capitalize()}: {y_pred[0]:.2f} points")
-        print(f"Percent dif: {(y_pred[0]/overunder_line-1)*100:.2f}%\n")
+        X_pred.insert(0, "PREDICTED", [y_pred_regressor])
+        X_pred.insert(0, "VEGAS_LINE", [overunder_line])
+        
+        y_pred_probability = classifier.predict_proba(X_pred)[0]
+        
+        # print(f"{dh.team_away.info.nickname[0].capitalize()} vs {dh.team_home.info.nickname[0].capitalize()}: {y_pred_regressor[0]:.2f} points")
+        # print(f"Percent dif: {(y_pred_regressor[0]/overunder_line-1)*100:.2f}%")
+        print(f"Over:  {y_pred_probability[0]*100:.2f}%\nUnder: {y_pred_probability[1]*100:.2f}%\n")
