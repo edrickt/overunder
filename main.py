@@ -38,10 +38,11 @@ if __name__ == "__main__":
         X_pred_classifier = X_pred
         X_pred_classifier.insert(0, "PREDICTED", [y_pred_regressor])
         X_pred_classifier.insert(0, "VEGAS_LINE", [overunder_line])
+       
         y_pred_probability = classifier.predict_proba(X_pred_classifier)[0]
         y_pred_classification = classifier.predict(X_pred_classifier)[0]
         
         print(f"Predicted points: {y_pred_regressor[0]:.2f} points")
         print(f"     Percent dif: {(y_pred_regressor[0]/overunder_line-1)*100:.2f}%")
         print(f"            Line: {'Over' if y_pred_classification else 'Under'}")
-        print(f"            Over: {y_pred_probability[1]*100:.2f}%\n           Under: {y_pred_probability[0]*100:.2f}%\n")
+        print(f"     Probability: {y_pred_probability[1 if y_pred_classification else 0]*100:.2f}%\n")
