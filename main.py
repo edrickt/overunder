@@ -17,10 +17,10 @@ if __name__ == "__main__":
         classifier = pickle.load(f)
     
     while True:        
-        team_away_name = input("      Away team: ")
-        team_home_name = input("      Home team: ")
+        team_away_name = input("       Away team: ")
+        team_home_name = input("       Home team: ")
         try:
-            overunder_line = float(input("     Vegas line: "))
+            overunder_line = float(input("      Vegas line: "))
         except:
             print("Bad Input\n")
             continue
@@ -37,6 +37,6 @@ if __name__ == "__main__":
         X_pred_classifier = pd.DataFrame({"VEGAS_LINE": [overunder_line], "PREDICTED": [y_pred_regressor]})
         y_pred_probability = classifier.predict_proba(X_pred_classifier)[0]
         
-        print(f"{dh.team_away.info.nickname[0].capitalize()} vs {dh.team_home.info.nickname[0].capitalize()}: {y_pred_regressor[0]:.2f} points")
-        print(f"    Percent dif: {(y_pred_regressor[0]/overunder_line-1)*100:.2f}%")
-        print(f"           Over: {y_pred_probability[0]*100:.2f}%\n          Under: {y_pred_probability[1]*100:.2f}%\n")
+        print(f"Predicted points: {y_pred_regressor[0]:.2f} points")
+        print(f"     Percent dif: {(y_pred_regressor[0]/overunder_line-1)*100:.2f}%")
+        print(f"            Over: {y_pred_probability[0]*100:.2f}%\n           Under: {y_pred_probability[1]*100:.2f}%\n")
