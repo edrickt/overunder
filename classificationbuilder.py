@@ -2,7 +2,8 @@ from models.elasticnetregressor import ENet
 from objects.datahandler import DataHandler
 from sklearn.linear_model import LogisticRegression
 from misc.helperfunctions import get_seasons
-from objects.team import Team
+from sklearn.model_selection import cross_val_score
+from sklearn.metrics import accuracy_score, precision_score, f1_score
 import pandas as pd
 import pickle
 
@@ -57,6 +58,15 @@ if __name__ == "__main__":
     y = df["OVER"]
     
     model = LogisticRegression(max_iter=10000).fit(X, y)
+    
+    accuracy = cross_val_score(model, X, y, scoring='accuracy')
+    precision = cross_val_score(model, X, y, scoring='precision')
+    f1 = cross_val_score(model, X, y, scoring='f1')
+    
+    print("Classification Cross Validation Results:")
+    print(f"Accuracy: {accuracy.mean()*100:.2f}%")
+    print(f"Precision: {precision.mean()*100:.2f}%")
+    print(f"F1 Score: {f1.mean()*100:.2f}%")
     
     with open("modelspickle/team_overunder_classifier.pkl", "wb") as f:
         pickle.dump(model, f)
