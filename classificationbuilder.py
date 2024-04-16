@@ -72,6 +72,8 @@ if __name__ == "__main__":
     grid.fit(X, y)
     print(grid.best_params_)
     
+    model = LogisticRegression(max_iter=100000, **grid.best_params_)
+    
     accuracy = cross_val_score(model, X, y, scoring="accuracy")
     precision = cross_val_score(model, X, y, scoring="precision")
     f1 = cross_val_score(model, X, y, scoring="f1")
