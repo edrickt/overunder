@@ -41,8 +41,6 @@ if __name__ == "__main__":
        
         y_pred_probability = classifier.predict_proba(X_pred_classifier)[0]
         y_pred_classification = classifier.predict(X_pred_classifier)[0]
-
-        print(y_pred_probability, y_pred_classification)
         
         print(f"Predicted points: {y_pred_regressor[0]:.2f} points")
         print(f"     Percent dif: {(y_pred_regressor[0]/overunder_line-1)*100:.2f}%")
