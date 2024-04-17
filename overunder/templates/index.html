@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="prediction-container">
+    <form id="predictionForm" method="post" class="prediction-form">
+        {% csrf_token %}
+        <div class="team-selection-section">
+            <div class="team-selection home-team">
+                <img src="{% static 'nba_team_logos/denver_nuggets_logo.svg' %}" alt="Home Team Logo" id="homeTeamLogo" class="team-logo">
+                <label for="id_team_home_name">HOME TEAM</label>
+                {{ form.team_home_name }}
+            </div>
+            <div class="vs-section">VS.</div>
+            <div class="team-selection away-team">
+                <img src="{% static 'nba_team_logos/miami_heat_logo.svg' %}" alt="Away Team Logo" id="awayTeamLogo" class="team-logo">
+                <label for="id_team_away_name">AWAY TEAM</label>
+                {{ form.team_away_name }}
+            </div>
+        </div>
+        <div class="vegas-line-section">
+            <div class="vegas-line-label">VEGAS LINE</div>
+            <div class="vegas-line-input">
+                <input type="text" id="vegas_line" name="vegas_line" class="vegas-line-input-box">
+            </div>            
+        </div>
+        <div class="button-container">
+            <button type="submit" class="predict-button">Predict</button>
+        </div>        
+    </form>
+</div>
+
+<div id="predictionResult" class="prediction-result"></div>
+{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'css/overunder.css' %}" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.django-select2').select2();
+
+        function setDefaultValues() {
+            var defaultHome = 'nuggets'; 
+            var defaultAway = 'heat'; 
+            $('#id_team_home_name').val(defaultHome).trigger('change');
+            $('#id_team_away_name').val(defaultAway).trigger('change');
+        }
+
+        setTimeout(setDefaultValues, 500); 
+
+        $('.django-select2').on('change', function() {
+            var teamInput = $(this).val();
+            var isHome = $(this).attr('id') === 'id_team_home_name';
+            var targetImg = isHome ? '#homeTeamLogo' : '#awayTeamLogo';
+            $.ajax({
+                url: '{% url "overunder:get_team_logo" %}', 
+                type: 'GET',
+                data: { 'team_input': teamInput },
+                success: function(data) {
+                    $(targetImg).hide().attr('src', data.logo_url).fadeIn(300); 
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching logo:', error);
+                    $(targetImg).hide(); 
+                }
+            });
+        });
+
+        $('#predictionForm').on('submit', function(e) {
+            e.preventDefault();
+            var formData = $(this).serialize();
+            $.ajax({
+                url: "", 
+                type: "POST",
+                data: formData,
+                success: function(data) {
+                    var resultDiv = $('#predictionResult');
+                    if (data.error) {
+                        resultDiv.html(`<p>Error: ${data.error}</p>`).addClass('active');
+                    } else {
+                        resultDiv.html(`
+                            <p>Predicted Points: ${data.predicted_points}</p>
+                            <p>Percent Difference: ${data.percent_diff}</p>
+                            <p>Line: ${data.line}</p>
+                            <p>Probability: ${data.probability}%</p>
+                        `).addClass('active');
+                    }
+                    $('html, body').animate({
+                        scrollTop: resultDiv.offset().top
+                    }, 1000);
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX Error:', error);
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}
