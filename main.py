@@ -34,10 +34,10 @@ if __name__ == "__main__":
         
         y_pred_regressor = regressor.predict(X_pred)
         
-        # X_pred_classifier = pd.DataFrame({"VEGAS_LINE": [overunder_line], "PREDICTED": [y_pred_regressor]})
-        X_pred_classifier = X_pred
-        X_pred_classifier.insert(0, "PREDICTED", [y_pred_regressor])
-        X_pred_classifier.insert(0, "VEGAS_LINE", [overunder_line])
+        X_pred_classifier = pd.DataFrame({"VEGAS_LINE": [overunder_line], "PREDICTED": [y_pred_regressor]})
+        # X_pred_classifier = X_pred
+        # X_pred_classifier.insert(0, "PREDICTED", [y_pred_regressor])
+        # X_pred_classifier.insert(0, "VEGAS_LINE", [overunder_line])
        
         y_pred_probability = classifier.predict_proba(X_pred_classifier)[0]
         y_pred_classification = classifier.predict(X_pred_classifier)[0]
