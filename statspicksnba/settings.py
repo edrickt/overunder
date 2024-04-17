@@ -36,6 +36,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'overunder',
+    'playerpoints',
     'django_select2',
     'django.contrib.admin',
     'django.contrib.auth',
