@@ -1,10 +1,8 @@
-from models.elasticnetregressor import ENet
 from objects.datahandler import DataHandler
 from sklearn.linear_model import LogisticRegression
 from misc.helperfunctions import get_seasons
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import GridSearchCV
-from sklearn.metrics import accuracy_score, precision_score, f1_score
 from objects.team import Team
 import pandas as pd
 import pickle
@@ -18,11 +16,8 @@ def build_csv():
     dh.load_data(update_team=False)
     dh.set_X_y()
 
-    X = dh.X
-    y = dh.y
-
-    model = ENet()
-    model.fit(X, y)
+    with open("modelspickle/team_overunder_regressor.pkl", "rb") as f:
+        model = pickle.load(f)
 
     for i in range(len(df)):
         cur_game = df.iloc[[i]]
@@ -60,23 +55,27 @@ if __name__ == "__main__":
     # X = df.drop(["OVER"], axis=1)
     X = df[["VEGAS_LINE", "PREDICTED"]]
     y = df["OVER"]
-    
-    model = LogisticRegression(C=0.5, penalty="l1", solver="saga").fit(X, y)
+
+    model = LogisticRegression(C=1, dual=False, fit_intercept=True, max_iter=10000, penalty='l1', solver='saga').fit(X, y)
     
     # FOR OPTIMIZING CLASSIFICATION MODEL
-    # OPTIMIZED PARAMETERS: {'C': 0.5, 'penalty': 'l1', 'solver': 'saga'}
+    # OPTIMAL: {'C': 1, 'dual': False, 'fit_intercept': True, 'max_iter': 999999999, 'penalty': 'l1', 'solver': 'saga'}
     # parameters = {
     #     "penalty" : ["l1", "l2", "elasticnet", "none"],
     #     "C" : [.5, 1, 1.5, 2, 2.5, 3],
     #     "solver" : ["lbfgs","newton-cg","liblinear","sag","saga"],
+    #     "dual": [True, False],
+    #     "fit_intercept": [True, False],
+    #     "max_iter": [999999999]
     # }
 
     # grid = GridSearchCV(model, parameters)
     # grid.fit(X, y)
     # print(grid.best_params_)
     
-    # model = LogisticRegression(max_iter=100000, **grid.best_params_)
-    # OPTIMIZED PARAMETERS: {'C': 0.5, 'penalty': 'l1', 'solver': 'saga'}
+    # model = LogisticRegression(**grid.best_params_)
+    # FOR OPTIMIZING CLASSIFICATION MODEL
+    # OPTIMAL: {'C': 1, 'dual': False, 'fit_intercept': True, 'max_iter': 999999999, 'penalty': 'l1', 'solver': 'saga'}
     
     accuracy = cross_val_score(model, X, y, scoring="accuracy")
     precision = cross_val_score(model, X, y, scoring="precision")
@@ -88,5 +87,5 @@ if __name__ == "__main__":
     print(f"F1 Score: {f1.mean()*100:.2f}%")
     
     # UNCOMMENT IF YOU WANT TO CREATE NEW PICKLE FILE FOR CLASSIFIER MODEL
-    # with open("modelspickle/team_overunder_classifier.pkl", "wb") as f:
-    #     pickle.dump(model, f)
+    with open("modelspickle/team_overunder_classifier.pkl", "wb") as f:
+        pickle.dump(model, f)

@@ -26,8 +26,8 @@ if __name__ == "__main__":
     decisiontree.fit(X, y)
     
     # UNCOMMENT IF YOU WANT TO CREATE A NEW PICKLE FILE FOR REGRESSOR MODEL
-    # with open("modelspickle/team_overunder_regressor.pkl", "wb") as f:
-    #     pickle.dump(enet, f)
+    with open("modelspickle/team_overunder_regressor.pkl", "wb") as f:
+        pickle.dump(enet, f)
     
     # enet.output_optimized_parameters()
     # randforestreg.output_optimized_parameters()
