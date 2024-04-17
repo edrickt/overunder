@@ -11,7 +11,7 @@ from sklearn.linear_model import LogisticRegression
 from .misc.helperfunctions import get_seasons
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import GridSearchCV
-from sklearn.metrics import accuracy_score, precision_score, f1_score
+from sklearn.svm import SVC
 from .objects.team import Team
 import pandas as pd
 import pickle
@@ -74,22 +74,42 @@ if __name__ == "__main__":
     X = df.drop(["OVER"], axis=1)
     y = df["OVER"]
     
-    model = LogisticRegression(C=3, penalty="l2", solver="liblinear").fit(X, y)
+    model = SVC(C=0.5, gamma=0.001).fit(X, y)
     
     # FOR OPTIMIZING CLASSIFICATION MODEL
+    # LOGISTIC REGRESSION MODEL
     # OPTIMIZED PARAMETERS: {'C': 3, 'penalty': 'l2', 'solver': 'liblinear'}
     # parameters = {
     #      "penalty" : ["l1", "l2", "elasticnet", "none"],
     #      "C" : [.5, 1, 1.5, 2, 2.5, 3],
     #      "solver" : ["lbfgs","newton-cg","liblinear","sag","saga"],
+    #      "max_iter": [10000000]
     # }
 
-    # grid = GridSearchCV(model, parameters)
+    # GRADIENT BOOSTING CLASSIFIER
+    # OPTIMIZED PARAMETERS: {'learning_rate': 0.1, 'max_depth': 3, 'min_samples_leaf': 2, 'min_samples_split': 5, 'n_estimators': 50, 'subsample': 0.6}
+    # parameters = {
+    #     "learning_rate": [0.05, 0.1, 0.2],
+    #     "n_estimators": [50, 100, 200],
+    #     "max_depth": [3, 5, 8],
+    #     "min_samples_split": [2, 5, 10],
+    #     "min_samples_leaf": [1, 2, 4],
+    #     "subsample": [0.6, 0.8, 1.0]
+    # }
+
+    # SVC
+    # OPTIMIZED PARAMETERS: 
+    # parameters = {
+    #     "C": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7],  
+    #     "gamma": [1, 0.1, 0.01, 0.001, 0.0001],
+    # }
+
+    # grid = GridSearchCV(model, parameters, verbose=2)
     # grid.fit(X, y)
     # print(grid.best_params_)
     
-    # model = LogisticRegression(max_iter=100000, **grid.best_params_)
-    # OPTIMIZED PARAMETERS: {'C': 3, 'penalty': 'l2', 'solver': 'liblinear'}
+    # model = SVC(**grid.best_params_)
+    # OPTIMIZED PARAMETERS: {'C': 0.5, 'gamma': 0.001}
     
     accuracy = cross_val_score(model, X, y, scoring="accuracy")
     precision = cross_val_score(model, X, y, scoring="precision")
