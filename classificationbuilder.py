@@ -57,13 +57,14 @@ if __name__ == "__main__":
     dh = DataHandler()
     dh.load_data()
     
-    X = df.drop(["OVER"], axis=1)
+    # X = df.drop(["OVER"], axis=1)
+    X = df[["VEGAS_LINE", "PREDICTED"]]
     y = df["OVER"]
     
-    model = LogisticRegression(C=3, penalty="l2", solver="liblinear").fit(X, y)
+    model = LogisticRegression(C=0.5, penalty="l1", solver="saga").fit(X, y)
     
     # FOR OPTIMIZING CLASSIFICATION MODEL
-    # OPTIMIZED PARAMETERS: {'C': 3, 'penalty': 'l2', 'solver': 'liblinear'}
+    # OPTIMIZED PARAMETERS: {'C': 0.5, 'penalty': 'l1', 'solver': 'saga'}
     # parameters = {
     #     "penalty" : ["l1", "l2", "elasticnet", "none"],
     #     "C" : [.5, 1, 1.5, 2, 2.5, 3],
@@ -75,7 +76,7 @@ if __name__ == "__main__":
     # print(grid.best_params_)
     
     # model = LogisticRegression(max_iter=100000, **grid.best_params_)
-    # OPTIMIZED PARAMETERS: {'C': 3, 'penalty': 'l2', 'solver': 'liblinear'}
+    # OPTIMIZED PARAMETERS: {'C': 0.5, 'penalty': 'l1', 'solver': 'saga'}
     
     accuracy = cross_val_score(model, X, y, scoring="accuracy")
     precision = cross_val_score(model, X, y, scoring="precision")
