@@ -74,7 +74,8 @@ if __name__ == "__main__":
     X = df.drop(["OVER"], axis=1)
     y = df["OVER"]
     
-    model = SVC(C=0.5, gamma=0.001).fit(X, y)
+    model = LogisticRegression(C=3, penalty="l2", solver="liblinear").fit(X, y)
+    # model = SVC(C=0.5, gamma=0.001).fit(X, y)
     
     # FOR OPTIMIZING CLASSIFICATION MODEL
     # LOGISTIC REGRESSION MODEL
