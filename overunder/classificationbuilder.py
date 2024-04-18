@@ -78,7 +78,7 @@ if __name__ == "__main__":
     
     # model = LogisticRegression(C=3, penalty="l2", solver="liblinear").fit(X, y)
     # model = GradientBoostingClassifier(learning_rate=0.1, max_depth=3, min_samples_leaf=2, min_samples_split=5, n_estimators=50, subsample=0.6).fit(X, y)
-    model = LogisticRegression(C=10000, max_iter=10000000, penalty="l2", solver="newton-cg")
+    model = LogisticRegression(C=125, penalty="l2", solver="newton-cg").fit(X, y)
     
     # FOR OPTIMIZING CLASSIFICATION MODEL
     # LOGISTIC REGRESSION MODEL
