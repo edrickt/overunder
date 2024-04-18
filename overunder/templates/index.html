@@ -52,7 +52,7 @@
             $('#id_team_away_name').val(defaultAway).trigger('change');
         }
 
-        setTimeout(setDefaultValues, 500); 
+        setTimeout(setDefaultValues, 10); 
 
         $('.django-select2').on('change', function() {
             var teamInput = $(this).val();

@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="prediction-container">
+    <form id="playerPredictionForm" method="post" class="prediction-form">
+        {% csrf_token %}
+        <div class="team-selection-section">
+            <div class="team-selection home-team">
+                <img src="{% static 'nba_team_logos/default_player_image.svg' %}" alt="Player Image" id="playerImage" class="team-logo">
+                <label for="id_player_name">Player Name</label>
+                {{ form.player_name }}
+            </div>
+            <div class="vs-section">VS.</div>
+            <div class="team-selection away-team">
+                <label for="id_opponent_team">Opponent Team</label>
+                {{ form.opponent_team }}
+            </div>
+        </div>
+        <div class="vegas-line-section">
+            <div class="vegas-line-label">PREDICTED OVER SCORE</div>
+            <div class="vegas-line-input">
+                <input type="text" id="vegas_line" name="vegas_line" class="vegas-line-input-box">
+            </div>            
+        </div>
+        <div class="button-container">
+            <button type="submit" class="predict-button">Predict</button>
+        </div>      
+    </form>
+</div>
+
+<div id="predictionResult" class="prediction-result"></div>
+{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'css/playerpoints.css' %}" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.django-select2').select2();
+        $('#playerPredictionForm').on('submit', function(e) {
+            e.preventDefault();
+            var formData = $(this).serialize();
+            $.ajax({
+                url: "{% url 'player_points:player_predictions' %}", 
+                type: "POST",
+                data: formData,
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                },
+                success: function(data) {
+                    var resultDiv = $('#predictionResult');
+                    if (data.error) {
+                        resultDiv.html(`<p>Error: ${data.error}</p>`).addClass('active');
+                    } else {
+                        resultDiv.html(`
+                            <p>Accuracy: ${data.accuracy}%</p>
+                            <p>Precision: ${data.precision}%</p>
+                            <p>Recall: ${data.recall}%</p>
+                            <p>F1-Score: ${data.f1_score}%</p>
+                        `).addClass('active');
+                    }
+                    $('html, body').animate({
+                        scrollTop: resultDiv.offset().top
+                    }, 1000);
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX Error:', error);
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}
