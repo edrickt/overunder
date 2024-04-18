@@ -4,6 +4,7 @@ from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import render
 from .forms import PredictionForm
+from django.shortcuts import get_object_or_404
 from .objects.datahandler import DataHandler
 from .models import TeamData
 
@@ -75,9 +76,9 @@ def index(request):
 
 def get_team_logo(request):
     team_input = request.GET.get('team_input')
-    try:
-        team = TeamData.objects.get(team_input=team_input)
-        logo_url = f"{request.build_absolute_uri('/static/nba_team_logos/')}{team.logo}"
-        return JsonResponse({'logo_url': logo_url}, status=200)
-    except TeamData.DoesNotExist:
-        return JsonResponse({'error': 'Team not found'}, status=404)
+    if team_input.isdigit():
+        team = get_object_or_404(TeamData, pk=team_input)
+    else:
+        team = get_object_or_404(TeamData, team_input=team_input)  
+    logo_url = f"{request.build_absolute_uri('/static/nba_team_logos/')}{team.logo}"
+    return JsonResponse({'logo_url': logo_url}, safe=False)

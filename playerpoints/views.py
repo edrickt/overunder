@@ -55,8 +55,6 @@ def prepare_player_gamelog(csv_filename, opponent_team=''):
 
     return player_gamelog
 
-    return player_gamelog
-
 def merge_with_season_summary(player_gamelog, player_name):
     combined_season_summary = pd.DataFrame()
     for season, file_path in seasons_dict.items():
@@ -122,7 +120,7 @@ def player_predictions(request):
                 return JsonResponse({'error': error})
             return JsonResponse(results)
         else:
-            print(form.errors)  # Print form errors to console
+            print(form.errors)  
             return JsonResponse({'error': 'Form is not valid, errors: ' + str(form.errors)})
 
     else:
@@ -132,3 +130,13 @@ def player_predictions(request):
         'players': players, 
         'teams': teams
     })
+
+def get_player_image_url(request):
+    player_id = request.GET.get('player_id')
+    if player_id:
+        try:
+            player = Players.objects.get(id=player_id)
+            return JsonResponse({'picture_url': player.picture}, safe=False)
+        except Players.DoesNotExist:
+            return JsonResponse({'error': 'Player not found'}, status=404)
+    return JsonResponse({'error': 'Invalid request'}, status=400)

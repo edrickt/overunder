@@ -10,7 +10,10 @@ class PlayerPredictionForm(forms.Form):
         empty_label=None,
         label='Player Name'
     )
-    score_threshold = forms.FloatField(label='Score Over How Many Points')  # Changed from IntegerField to FloatField
+    score_threshold = forms.FloatField(
+        label='Score Over How Many Points',
+        widget=forms.TextInput(attrs={'class': 'vegas-line-input-box', 'type': 'text', 'id': 'vegas_line', 'name': 'vegas_line'})
+    )
     opponent_team = forms.ModelChoiceField(
         queryset=TeamData.objects.all(),
         widget=Select2Widget,

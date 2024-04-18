@@ -7,14 +7,15 @@
         {% csrf_token %}
         <div class="team-selection-section">
             <div class="team-selection home-team">
-                <img src="{% static 'nba_team_logos/default_player_image.svg' %}" alt="Player Image" id="playerImage" class="team-logo">
-                <label for="id_player_name">Player Name</label>
+                <img src="" alt="Player Image" id="playerImage" class="team-logo">
+                <label for="id_player_name">PLAYER NAME</label>
                 {{ form.player_name }}
                 {{ form.player_name.errors }}
             </div>
             <div class="vs-section">VS.</div>
             <div class="team-selection away-team">
-                <label for="id_opponent_team">Opponent Team</label>
+                <img src="" alt="Opponent Team Logo" id="opponentTeamLogo" class="team-logo">
+                <label for="id_opponent_team">OPPONENT TEAM</label>
                 {{ form.opponent_team }}
                 {{ form.opponent_team.errors }}
             </div>
@@ -32,7 +33,6 @@
     </form>
 </div>
 
-
 <div id="predictionResult" class="prediction-result"></div>
 {% endblock %}
 
@@ -47,11 +47,51 @@
 <script>
     $(document).ready(function() {
         $('.django-select2').select2();
+
+        function updatePlayerImage(playerId) {
+            if (playerId) {
+                $.getJSON('/playerpoints/api/get_player_image_url/', {player_id: playerId}, function(data) {
+                    if (data.picture_url) {
+                        $('#playerImage').hide().attr('src', data.picture_url).fadeIn(300);
+                    } else {
+                        $('#playerImage').attr('src', ''); 
+                    }
+                }).fail(function() {
+                    console.error("Error: Could not retrieve player image.");
+                    $('#playerImage').attr('src', ''); 
+                });
+            }
+        }
+
+        $('#id_player_name').on('change', function() {
+            var playerId = $(this).val();  
+            updatePlayerImage(playerId); 
+        });
+
+        $('#id_opponent_team').on('change', function() {
+            var teamInput = $(this).val();
+            $.ajax({
+                url: "{% url 'overunder:get_team_logo' %}",
+                type: 'GET',
+                data: { 'team_input': teamInput },
+                success: function(data) {
+                    $('#opponentTeamLogo').hide().attr('src', data.logo_url).fadeIn(300);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching logo:', error);
+                    $('#opponentTeamLogo').attr('src', ''); 
+                }
+            });
+        });
+
+        $('#id_player_name').val('269').trigger('change'); 
+        $('#id_opponent_team').val('17').trigger('change'); 
+
         $('#playerPredictionForm').on('submit', function(e) {
             e.preventDefault();
             var formData = $(this).serialize();
             $.ajax({
-                url: "{% url 'player_points:player_predictions' %}", 
+                url: "{% url 'playerpoints:player_predictions' %}",
                 type: "POST",
                 data: formData,
                 beforeSend: function(xhr) {
