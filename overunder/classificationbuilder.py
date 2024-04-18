@@ -12,6 +12,8 @@ from .misc.helperfunctions import get_seasons
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import GridSearchCV
 from sklearn.svm import SVC
+from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
+from sklearn.naive_bayes import GaussianNB
 from .objects.team import Team
 import pandas as pd
 import pickle
@@ -74,17 +76,19 @@ if __name__ == "__main__":
     X = df.drop(["OVER"], axis=1)
     y = df["OVER"]
     
-    model = LogisticRegression(C=3, penalty="l2", solver="liblinear").fit(X, y)
-    # model = SVC(C=0.5, gamma=0.001).fit(X, y)
+    # model = LogisticRegression(C=3, penalty="l2", solver="liblinear").fit(X, y)
+    # model = GradientBoostingClassifier(learning_rate=0.1, max_depth=3, min_samples_leaf=2, min_samples_split=5, n_estimators=50, subsample=0.6).fit(X, y)
+    model = LogisticRegression(C=10000, max_iter=10000000, penalty="l2", solver="newton-cg")
     
     # FOR OPTIMIZING CLASSIFICATION MODEL
     # LOGISTIC REGRESSION MODEL
     # OPTIMIZED PARAMETERS: {'C': 3, 'penalty': 'l2', 'solver': 'liblinear'}
+    # OPTIMIZED PARAMETERS 2: {'C': 10000.0, 'max_iter': 10000000, 'penalty': 'l2', 'solver': 'newton-cg'}
     # parameters = {
-    #      "penalty" : ["l1", "l2", "elasticnet", "none"],
-    #      "C" : [.5, 1, 1.5, 2, 2.5, 3],
-    #      "solver" : ["lbfgs","newton-cg","liblinear","sag","saga"],
-    #      "max_iter": [10000000]
+    #     "penalty" : ["l1", "l2", "elasticnet", "none"],
+    #     "C" : np.logspace(-4, 4, 20),
+    #     "solver" : ["lbfgs","newton-cg","liblinear","sag","saga"],
+    #     "max_iter": [10000000]
     # }
 
     # GRADIENT BOOSTING CLASSIFIER
@@ -99,18 +103,28 @@ if __name__ == "__main__":
     # }
 
     # SVC
-    # OPTIMIZED PARAMETERS: 
+    # OPTIMIZED PARAMETERS: {'C': 0.5, 'gamma': 0.001}
     # parameters = {
     #     "C": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7],  
-    #     "gamma": [1, 0.1, 0.01, 0.001, 0.0001],
+    #     "gamma": [.001, .01, .1, 1, 10, 100, 1000],
+    # }
+    
+    # RANDOM FOREST CLASSIFIER
+    # OPTIMIZED PARAMETERS: {'bootstrap': False, 'max_depth': 20, 'max_features': 'sqrt', 'min_samples_leaf': 2, 'min_samples_split': 2, 'n_estimators': 200}
+    # parameters = {
+    #     'bootstrap': [True, False],
+    #     'max_depth': [10, 20, None],
+    #     'max_features': ['sqrt'],
+    #     'min_samples_leaf': [1, 2, 4],
+    #     'min_samples_split': [2, 5, 10],
+    #     'n_estimators': [200, 400, 600]
     # }
 
     # grid = GridSearchCV(model, parameters, verbose=2)
     # grid.fit(X, y)
     # print(grid.best_params_)
     
-    # model = SVC(**grid.best_params_)
-    # OPTIMIZED PARAMETERS: {'C': 0.5, 'gamma': 0.001}
+    # model = LogisticRegression(**grid.best_params_).fit(X, y)
     
     accuracy = cross_val_score(model, X, y, scoring="accuracy")
     precision = cross_val_score(model, X, y, scoring="precision")
