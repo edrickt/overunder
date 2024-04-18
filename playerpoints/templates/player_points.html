@@ -64,7 +64,7 @@
 <script>
 $(document).ready(function() {
     $('.django-select2').select2();
-    $('#resultModal').hide()
+    $('#resultModal').hide();
 
         function updatePlayerImage(playerId) {
         if (playerId) {
@@ -72,7 +72,7 @@ $(document).ready(function() {
                 if (data.picture_url) {
                     $('#playerImage').hide().attr('src', data.picture_url).fadeIn(300);
                     $('#modalPlayerImage').attr('src', data.picture_url);  
-                    $('#modalPlayerName').text($('#id_player_name option:selected').text());  /
+                    $('#modalPlayerName').text($('#id_player_name option:selected').text());  
                 } else {
                     $('#playerImage').attr('src', '');
                     $('#modalPlayerImage').attr('src', '');
@@ -108,7 +108,7 @@ $(document).ready(function() {
     });
 
     $('#id_player_name').val('269').trigger('change'); 
-    $('#id_opponent_team').val('17').trigger('change'); 
+    $('#id_opponent_team').val('17').trigger('change');
 
     $('#playerPredictionForm').on('submit', function(e) {
         e.preventDefault();
@@ -150,6 +150,7 @@ $(document).ready(function() {
     $('.close-button').on('click', function() {
         $('#resultModal').css('display', 'none');
     });
+
 
     $(window).on('click', function(event) {
         if ($(event.target).is('#resultModal')) {
