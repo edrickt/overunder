@@ -38,7 +38,7 @@ def generate_player_gamelog_csv(player_name):
         gamelog = playergamelog.PlayerGameLog(player_id=player_id, season=season)
         gamelog_df = gamelog.get_data_frames()[0]
         gamelog_df['Season'] = season  
-        all_seasons_gamelog_df = pd.concat([all_seasons_gamelog_df, gamelog_df], ignore_index=True)
+        all_seasons_gamelog_df = pd.concat([all_seasons_gamelog_df, gamelog_df.dropna()], ignore_index=True)
 
     csv_file_name = f"{player_name.lower().replace(' ', '_')}_gamelog_2020_to_2024.csv"
     all_seasons_gamelog_df.to_csv(csv_file_name, index=False)
@@ -72,26 +72,38 @@ def run_model(player_name, score_threshold, opponent_team=''):
     csv_filename, error = generate_player_gamelog_csv(player_name)
     if error:
         return None, error
-    player_gamelog = prepare_player_gamelog(csv_filename, opponent_team)
-    player_gamelog = merge_with_season_summary(player_gamelog, player_name)
+    
+    try:
+        player_gamelog = prepare_player_gamelog(csv_filename, opponent_team)
+        player_gamelog = merge_with_season_summary(player_gamelog, player_name)
 
-    player_gamelog['Scored_Over_X'] = (player_gamelog['PTS'] > score_threshold).astype(int)
-    features = player_gamelog[['MIN', 'FG_PCT', 'FG3_PCT', 'FT_PCT', 'Rolling_PTS_5', 'Avg_PTS_against_Opponent', 'Home_Game', 'ORtg', 'DRtg']]
-    target = player_gamelog['Scored_Over_X']
+        player_gamelog['Scored_Over_X'] = (player_gamelog['PTS'] > score_threshold).astype(int)
 
-    pipeline = make_pipeline(SimpleImputer(strategy='mean'), LogisticRegression(max_iter=100000))
-    accuracy_scores = cross_val_score(pipeline, features, target, cv=10, scoring='accuracy')
-    precision_scores = cross_val_score(pipeline, features, target, cv=10, scoring='precision')
-    recall_scores = cross_val_score(pipeline, features, target, cv=10, scoring='recall')
-    f1_scores = cross_val_score(pipeline, features, target, cv=10, scoring=make_scorer(f1_score, zero_division=1))
+        minimum_games_required = 10  
+        if len(player_gamelog) < minimum_games_required or player_gamelog['Scored_Over_X'].nunique() < 2:
+            return None, f"Insufficient data to provide predictions. Need at least {minimum_games_required} games and at least two classes in target."
 
-    results = {
-        'accuracy': accuracy_scores.mean(),
-        'precision': precision_scores.mean(),
-        'recall': recall_scores.mean(),
-        'f1_score': f1_scores.mean()
-    }
-    return results, None
+        features = player_gamelog[['MIN', 'FG_PCT', 'FG3_PCT', 'FT_PCT', 'Rolling_PTS_5', 'Avg_PTS_against_Opponent', 'Home_Game', 'ORtg', 'DRtg']]
+        target = player_gamelog['Scored_Over_X']
+
+        pipeline = make_pipeline(SimpleImputer(strategy='mean'), LogisticRegression(max_iter=100000))
+        accuracy_scores = cross_val_score(pipeline, features, target, cv=10, scoring='accuracy')
+        precision_scores = cross_val_score(pipeline, features, target, cv=10, scoring=make_scorer(precision_score, zero_division=1))
+        recall_scores = cross_val_score(pipeline, features, target, cv=10, scoring='recall')
+        f1_scores = cross_val_score(pipeline, features, target, cv=10, scoring=make_scorer(f1_score, zero_division=1))
+
+        results = {
+            'accuracy': accuracy_scores.mean(),
+            'precision': precision_scores.mean(),
+            'recall': recall_scores.mean(),
+            'f1_score': f1_scores.mean()
+        }
+    finally:
+        if os.path.exists(csv_filename):
+            os.remove(csv_filename)
+    
+    return results, None 
+
 
 def player_predictions(request):
     players = Players.objects.all()
@@ -108,12 +120,13 @@ def player_predictions(request):
             results, error = run_model(player_name, score_threshold, opponent_team_abbr)
             if error:
                 return JsonResponse({'error': error})
-            
             return JsonResponse(results)
         else:
-            return JsonResponse({'error': 'Form is not valid'})
+            print(form.errors)  # Print form errors to console
+            return JsonResponse({'error': 'Form is not valid, errors: ' + str(form.errors)})
 
-    form = PlayerPredictionForm()
+    else:
+        form = PlayerPredictionForm()
     return render(request, 'player_points.html', {
         'form': form, 
         'players': players, 

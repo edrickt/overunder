@@ -1,5 +1,3 @@
-# forms.py in your playerpoints app
-
 from django import forms
 from django_select2.forms import Select2Widget
 from .models import Players
@@ -8,15 +6,15 @@ from overunder.models import TeamData
 class PlayerPredictionForm(forms.Form):
     player_name = forms.ModelChoiceField(
         queryset=Players.objects.all(),
-        label='Player Name',
         widget=Select2Widget,
-        empty_label="Select a Player"
+        empty_label=None,
+        label='Player Name'
     )
-    score_threshold = forms.FloatField(label='Score Over How Many Points')  
+    score_threshold = forms.FloatField(label='Score Over How Many Points')  # Changed from IntegerField to FloatField
     opponent_team = forms.ModelChoiceField(
         queryset=TeamData.objects.all(),
-        label="Opponent",
         widget=Select2Widget,
-        empty_label="Select a Team",
+        empty_label="Any Team",
         required=False,
+        label='Opponent Team'
     )

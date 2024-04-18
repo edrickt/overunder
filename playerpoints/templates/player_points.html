@@ -10,17 +10,20 @@
                 <img src="{% static 'nba_team_logos/default_player_image.svg' %}" alt="Player Image" id="playerImage" class="team-logo">
                 <label for="id_player_name">Player Name</label>
                 {{ form.player_name }}
+                {{ form.player_name.errors }}
             </div>
             <div class="vs-section">VS.</div>
             <div class="team-selection away-team">
                 <label for="id_opponent_team">Opponent Team</label>
                 {{ form.opponent_team }}
+                {{ form.opponent_team.errors }}
             </div>
         </div>
         <div class="vegas-line-section">
             <div class="vegas-line-label">PREDICTED OVER SCORE</div>
             <div class="vegas-line-input">
-                <input type="text" id="vegas_line" name="vegas_line" class="vegas-line-input-box">
+                {{ form.score_threshold }}
+                {{ form.score_threshold.errors }}
             </div>            
         </div>
         <div class="button-container">
@@ -28,6 +31,7 @@
         </div>      
     </form>
 </div>
+
 
 <div id="predictionResult" class="prediction-result"></div>
 {% endblock %}
